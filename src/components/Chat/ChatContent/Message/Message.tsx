@@ -40,8 +40,12 @@ const Message = React.memo(
         >
           <Avatar role={role} />
           <div className='w-[calc(100%-50px)] '>
-            <span className={` ${role}`}>
-              {role.slice(0, 1).toUpperCase()}{role.slice(1)}
+          <span className={`${role}`}>
+              {role === 'user' ? (
+                <strong>{role.slice(0, 1).toUpperCase() + role.slice(1)}</strong>
+              ) : (
+                <strong>{role.slice(0, 1).toUpperCase() + role.slice(1)}</strong>
+              )}
             </span>
             <MessageContent
               role={role}

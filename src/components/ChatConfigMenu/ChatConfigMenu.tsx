@@ -68,7 +68,7 @@ const ChatConfigPopup = ({
       presence_penalty: _presencePenalty,
       frequency_penalty: _frequencyPenalty,
     });
-    setDefaultSystemMessage(_systemMessage);
+    // setDefaultSystemMessage(_systemMessage);
     setIsModalOpen(false);
   };
 

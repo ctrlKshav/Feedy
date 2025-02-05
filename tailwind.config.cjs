@@ -16,6 +16,9 @@ module.exports = {
     fontFamily: {
       sans: [
         'Söhne',
+        'Open Sans',
+        'ui-sans-serif',
+        'DM Sans',
         'Roboto',
         'ui-sans-serif',
         'system-ui',
