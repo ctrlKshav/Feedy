@@ -27,13 +27,12 @@ const ChatContent = () => {
       ? state.chats[state.currentChatIndex].messages.length
       : 0
   );
-  const advancedMode = useStore((state) => state.advancedMode);
+  const advancedMode = false;
   const generating = useStore.getState().generating;
   const hideSideMenu = useStore((state) => state.hideSideMenu);
 
   const saveRef = useRef<HTMLDivElement>(null);
 
-  // clear error at the start of generating new messages
   useEffect(() => {
     if (generating) {
       setError('');
@@ -45,29 +44,14 @@ const ChatContent = () => {
   return (
     <div className='flex-1 flex flex-col h-full'>
       <div className='flex-1 overflow-y-auto'>
-        <ScrollToBottom
-          className='h-full dark:bg-gray-800'
-          followButtonClassName='hidden'
-        >
+        <ScrollToBottom className='h-full dark:bg-gray-800' followButtonClassName='hidden'>
           <ScrollToBottomButton />
           <div className='flex flex-col items-center text-sm dark:bg-gray-800 min-h-full'>
-            <div
-              className='flex flex-col items-center text-sm dark:bg-gray-800 w-full'
-              ref={saveRef}
-            >
-              {/* {advancedMode && <ChatTitle />} */}
-              {/* {!generating && advancedMode && messages?.length === 0 && (
-                <NewMessageButton messageIndex={-1} />
-              )} */}
+            <div className='flex flex-col items-center text-sm dark:bg-gray-800 w-full' ref={saveRef}>
               {messages?.map((message, index) => (
                 (advancedMode || index !== 0 || message.role !== 'system') && (
                   <React.Fragment key={index}>
-                    <Message
-                      role={message.role}
-                      content={message.content}
-                      messageIndex={index}
-                    />
-                    {/* {!generating && advancedMode && <NewMessageButton messageIndex={index} />} */}
+                    <Message role={message.role} content={message.content} messageIndex={index} />
                   </React.Fragment>
                 )
               ))}
@@ -77,26 +61,7 @@ const ChatContent = () => {
       </div>
       
       <div className='w-full flex-shrink-0 mt-auto'>
-        <InputMessage
-          role={inputRole}
-          content=''
-          messageIndex={stickyIndex}
-        />
-        {/* {error !== '' && (
-          <div className='relative py-2 px-3 w-3/5 mt-3 max-md:w-11/12 border rounded-md border-red-500 bg-red-500/10 mx-auto'>
-            <div className='text-gray-600 dark:text-gray-100 text-sm whitespace-pre-wrap'>
-              {error}
-            </div>
-            <div
-              className='text-white absolute top-1 right-1 cursor-pointer'
-              onClick={() => {
-                setError('');
-              }}
-            >
-              <CrossIcon />
-            </div>
-          </div>
-        )} */}
+        <InputMessage role={inputRole} content='' messageIndex={stickyIndex} />
       </div>
     </div>
   );

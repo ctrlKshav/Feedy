@@ -25,7 +25,7 @@ const InputMessage = React.memo(
 
     return (
       <div
-        className={`w-full border-b border-black/10 dark:border-gray-900/50 text-gray-800 dark:text-gray-100 group `}
+        className={`w-full  border-b border-black/10 dark:border-gray-900/50 text-gray-800 dark:text-gray-100 group`}
       >
         <div
           className={`text-base gap-4 md:gap-6 m-auto p-4 md:py-6 flex transition-all ease-in-out ${
