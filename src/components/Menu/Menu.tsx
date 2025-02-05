@@ -45,7 +45,7 @@ const Menu = () => {
                 <NewFolder />
               </div>
               <ChatHistoryList />
-              <MenuOptions />
+              {/* <MenuOptions /> */}
             </nav>
           </div>
         </div>
