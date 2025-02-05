@@ -123,14 +123,7 @@ const EditView = ({
         ></textarea>
       </div>
       
-      {isModalOpen && (
-        <PopupModal
-          setIsModalOpen={setIsModalOpen}
-          title={t('warning') as string}
-          message={t('clearMessageWarning') as string}
-          handleConfirm={handleGenerate}
-        />
-      )}
+     
     </>
   );
 };

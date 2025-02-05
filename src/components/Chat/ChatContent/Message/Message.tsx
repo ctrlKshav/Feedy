@@ -22,7 +22,7 @@ const Message = React.memo(({ role, content, messageIndex, sticky = false }: {
         ${hideSideMenu ? 'md:max-w-5xl lg:max-w-5xl xl:max-w-6xl' : 'md:max-w-3xl lg:max-w-3xl xl:max-w-4xl'}
         ${role === 'user' ? 'flex-row-reverse text-right' : 'text-left'}`}>
         <Avatar role={role} />
-        <div className='w-[calc(100%-50px)]'>
+        <div className='w-[calc(100%-50px)] '>
           <span className={`${role}`}>{role.charAt(0).toUpperCase() + role.slice(1)}</span>
           <MessageContent role={role} content={content} messageIndex={messageIndex} sticky={sticky} />
         </div>
