@@ -3,6 +3,7 @@ import useStore from '@store/store';
 
 import ContentView from './View/ContentView';
 import EditView from './View/EditView';
+import { Role } from '@type/chat';
 
 const MessageContent = ({
   role,
@@ -10,7 +11,7 @@ const MessageContent = ({
   messageIndex,
   sticky = false,
 }: {
-  role: string;
+  role: Role;
   content: string;
   messageIndex: number;
   sticky?: boolean;
@@ -19,7 +20,7 @@ const MessageContent = ({
   const advancedMode = useStore((state) => state.advancedMode);
 
   return (
-    <div className='relative flex flex-col gap-2 md:gap-3 lg:w-[calc(100%-115px)] bg-gray-800 rounded-lg p-4'>
+    <div className={`relative flex flex-col gap-2 md:gap-3 lg:w-[calc(100%-115px)] ${sticky ? "" : "bg-gray-700"} rounded-lg p-4`}>
       {advancedMode && <div className='flex flex-grow flex-col gap-3'></div>}
       {isEdit ? (
         <EditView

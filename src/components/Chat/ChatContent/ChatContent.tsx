@@ -12,6 +12,7 @@ import useSubmit from '@hooks/useSubmit';
 import DownloadChat from './DownloadChat';
 import CloneChat from './CloneChat';
 import ShareGPT from '@components/ShareGPT';
+import InputMessage from './InputMessage';
 
 const ChatContent = () => {
   const inputRole = useStore((state) => state.inputRole);
@@ -82,11 +83,10 @@ const ChatContent = () => {
       </div>
       
       <div className='w-full flex-shrink-0 mt-auto'>
-        <Message
+        <InputMessage
           role={inputRole}
           content=''
           messageIndex={stickyIndex}
-          sticky
         />
         {/* {error !== '' && (
           <div className='relative py-2 px-3 w-3/5 mt-3 max-md:w-11/12 border rounded-md border-red-500 bg-red-500/10 mx-auto'>
