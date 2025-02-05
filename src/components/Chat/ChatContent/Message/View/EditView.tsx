@@ -193,14 +193,7 @@ const EditView = ({
         </div>
       </div>
       
-      {isModalOpen && (
-        <PopupModal
-          setIsModalOpen={setIsModalOpen}
-          title={t('warning') as string}
-          message={t('clearMessageWarning') as string}
-          handleConfirm={handleGenerate}
-        />
-      )}
+     
     </>
   );
 };

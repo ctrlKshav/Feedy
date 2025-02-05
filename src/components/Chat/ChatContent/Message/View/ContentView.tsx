@@ -114,31 +114,14 @@ const ContentView = memo(
             </div>
           )}
         </div>
-        <div className='flex justify-end gap-2 w-full mt-2'>
+        <div className={`flex ${role === "user" ? "justify-end" : "justify-start"} gap-2 w-full mt-2 `}>
           {isDelete || (
             <>
               <MarkdownModeButton />
               <CopyButton onClick={handleCopy} />
             </>
           )}
-          {isDelete && (
-            <>
-              <button
-                className='p-1 hover:text-white'
-                aria-label='cancel'
-                onClick={() => setIsDelete(false)}
-              >
-                <CrossIcon />
-              </button>
-              <button
-                className='p-1 hover:text-white'
-                aria-label='confirm'
-                onClick={handleDelete}
-              >
-                <TickIcon />
-              </button>
-            </>
-          )}
+         
         </div>
       </div>
     );
