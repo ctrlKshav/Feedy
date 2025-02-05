@@ -32,6 +32,24 @@ import DeleteButton from './Button/DeleteButton';
 import MarkdownModeButton from './Button/MarkdownModeButton';
 
 import CodeBlock from '../CodeBlock';
+import { Paperclip, FileText, Image, File, FileCode, FileSpreadsheet, FileAudio, FileVideo } from 'lucide-react';
+
+interface Attachment {
+  url: string;
+  type: string;
+  name: string;
+}
+
+const getFileIcon = (type: string) => {
+  if (type.startsWith('image/')) return <Image className="w-4 h-4" />;
+  if (type.startsWith('text/') || type === 'application/pdf') return <FileText className="w-4 h-4" />;
+  if (type.startsWith('audio/')) return <FileAudio className="w-4 h-4" />;
+  if (type.startsWith('video/')) return <FileVideo className="w-4 h-4" />;
+  if (type === 'application/json' || type === 'application/javascript') return <FileCode className="w-4 h-4" />;
+  if (type === 'application/vnd.ms-excel' || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') 
+    return <FileSpreadsheet className="w-4 h-4" />;
+  return <File className="w-4 h-4" />;
+};
 
 const ContentView = memo(
   ({
@@ -56,6 +74,8 @@ const ContentView = memo(
     );
     const inlineLatex = useStore((state) => state.inlineLatex);
     const markdownMode = useStore((state) => state.markdownMode);
+    const messages = useStore((state) => state.chats?.[currentChatIndex]?.messages ?? []);
+    const generating = useStore.getState().generating;
 
     const handleDelete = () => {
       const updatedChats: ChatInterface[] = JSON.parse(
@@ -65,48 +85,38 @@ const ContentView = memo(
       setChats(updatedChats);
     };
 
-
-
     const handleCopy = () => {
       navigator.clipboard.writeText(content);
     };
 
     return (
-      <>
-        <div className='markdown prose w-full md:max-w-full break-words dark:prose-invert dark share-gpt-message'>
-          {markdownMode ? (
-            <ReactMarkdown
-              remarkPlugins={[
-                remarkGfm,
-                [remarkMath, { singleDollarTextMath: inlineLatex }],
-              ]}
-              rehypePlugins={[
-                rehypeKatex,
-                [
-                  rehypeHighlight,
-                  {
-                    detect: true,
-                    ignoreMissing: true,
-                    subset: codeLanguageSubset,
-                  },
-                ],
-              ]}
-              linkTarget='_new'
-              components={{
-                code,
-                p,
-              }}
-            >
-              {content}
-            </ReactMarkdown>
-          ) : (
-            <span className='whitespace-pre-wrap'>{content}</span>
+      <div className='relative flex flex-col gap-3 pb-2'>
+        <div className='markdown prose w-full break-words dark:prose-invert dark'>
+          {content}
+          {messages[messageIndex]?.attachments?.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-2">
+              {messages[messageIndex].attachments?.map((attachment: Attachment, index: number) => (
+                <a
+                  key={index}
+                  href={attachment.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 p-2 text-sm rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                >
+                  {getFileIcon(attachment.type)}
+                  <span className="text-xs text-gray-600 dark:text-gray-300">
+                    {attachment.name.length > 20 
+                      ? `${attachment.name.substring(0, 15)}...${attachment.name.split('.').pop()}`
+                      : attachment.name}
+                  </span>
+                </a>
+              ))}
+            </div>
           )}
         </div>
         <div className='flex justify-end gap-2 w-full mt-2'>
           {isDelete || (
             <>
-
               <MarkdownModeButton />
               <CopyButton onClick={handleCopy} />
             </>
@@ -130,7 +140,7 @@ const ContentView = memo(
             </>
           )}
         </div>
-      </>
+      </div>
     );
   }
 );

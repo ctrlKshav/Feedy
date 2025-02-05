@@ -9,7 +9,14 @@ import { ChatInterface } from '@type/chat';
 import PopupModal from '@components/PopupModal';
 import TokenCount from '@components/TokenCount';
 import CommandPrompt from '../CommandPrompt';
-import { Send } from 'lucide-react';
+import { Send, Paperclip } from 'lucide-react';
+
+interface Attachment {
+  name: string;
+  type: string;
+  size: number;
+  url: string;
+}
 
 const EditView = ({
   content,
@@ -29,6 +36,7 @@ const EditView = ({
   const [_content, _setContent] = useState<string>(content);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const textareaRef = React.createRef<HTMLTextAreaElement>();
+  const [attachments, setAttachments] = useState<File[]>([]);
 
   const { t } = useTranslation();
 
@@ -62,22 +70,45 @@ const EditView = ({
     }
   };
 
-
   const { handleSubmit } = useSubmit();
+  const handleAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      setAttachments(prev => [...prev, ...files]);
+    }
+  };
+
   const handleGenerate = () => {
     if (useStore.getState().generating) return;
     const updatedChats: ChatInterface[] = JSON.parse(
       JSON.stringify(useStore.getState().chats)
     );
     const updatedMessages = updatedChats[currentChatIndex].messages;
+    
     if (sticky) {
-      if (_content !== '') {
-        updatedMessages.push({ role: inputRole, content: _content });
+      if (_content !== '' || attachments.length > 0) {
+        updatedMessages.push({
+          role: inputRole,
+          content: _content,
+          attachments: attachments.map<Attachment>(file => ({
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            url: URL.createObjectURL(file)
+          }))
+        });
       }
       _setContent('');
+      setAttachments([]);
       resetTextAreaHeight();
     } else {
       updatedMessages[messageIndex].content = _content;
+      updatedMessages[messageIndex].attachments = attachments.map<Attachment>(file => ({
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        url: URL.createObjectURL(file)
+      }));
       updatedChats[currentChatIndex].messages = updatedMessages.slice(
         0,
         messageIndex + 1
@@ -112,24 +143,53 @@ const EditView = ({
         }`}
       >
         <div className='flex items-end gap-2'>
-          <textarea
-            ref={textareaRef}
-            className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden focus:ring-0 focus-visible:ring-0 leading-7 w-full placeholder:text-gray-500/40'
-            onChange={(e) => {
-              _setContent(e.target.value);
-            }}
-            value={_content}
-            placeholder={t('submitPlaceholder') as string}
-            onKeyDown={handleKeyDown}
-            rows={1}
-          ></textarea>
-          <button
-            onClick={handleGenerate}
-            className='flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50'
-            disabled={useStore.getState().generating}
-          >
-            <Send className='w-5 h-5' />
-          </button>
+          <div className="relative flex-1">
+            <textarea
+              ref={textareaRef}
+              className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden focus:ring-0 focus-visible:ring-0 leading-7 w-full placeholder:text-gray-500/40'
+              onChange={(e) => {
+                _setContent(e.target.value);
+              }}
+              value={_content}
+              placeholder={t('submitPlaceholder') as string}
+              onKeyDown={handleKeyDown}
+              rows={1}
+            ></textarea>
+            {attachments.length > 0 && (
+              <div className="mt-2 flex gap-2 flex-wrap">
+                {attachments.map((file, index) => (
+                  <div key={index} className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+                    {file.name}
+                    <button 
+                      onClick={() => setAttachments(prev => prev.filter((_, i) => i !== index))}
+                      className="ml-2 text-red-500 hover:text-red-700"
+                    >
+                      ×
+                  </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <label className="flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+              <Paperclip className="w-5 h-5" />
+              <input
+                type="file"
+                multiple
+                onChange={handleAttachment}
+                className="hidden"
+                accept="image/*,.pdf,.doc,.docx,.txt"
+              />
+            </label>
+            <button
+              onClick={handleGenerate}
+              className='flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50'
+              disabled={useStore.getState().generating}
+            >
+              <Send className='w-5 h-5' />
+            </button>
+          </div>
         </div>
       </div>
       
