@@ -94,17 +94,17 @@ const ContentView = memo(
         <div className='markdown prose w-full break-words dark:prose-invert dark'>
           {content}
           {messages[messageIndex]?.attachments?.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className="mt-2 flex  flex-wrap gap-2 justify-end">
               {messages[messageIndex].attachments?.map((attachment: Attachment, index: number) => (
                 <a
                   key={index}
                   href={attachment.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 p-2 text-sm rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  className="flex items-center gap-2 p-2 text-sm rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-700 no-underline text-white"
                 >
                   {getFileIcon(attachment.type)}
-                  <span className="text-xs text-gray-600 dark:text-gray-300">
+                  <span className="text-xs text-black dark:text-white ">
                     {attachment.name.length > 20 
                       ? `${attachment.name.substring(0, 15)}...${attachment.name.split('.').pop()}`
                       : attachment.name}

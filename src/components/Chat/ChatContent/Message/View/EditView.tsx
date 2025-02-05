@@ -11,13 +11,6 @@ import TokenCount from '@components/TokenCount';
 import CommandPrompt from '../CommandPrompt';
 import { Send, Paperclip } from 'lucide-react';
 
-interface Attachment {
-  name: string;
-  type: string;
-  size: number;
-  url: string;
-}
-
 const EditView = ({
   content,
   setIsEdit,
@@ -90,7 +83,7 @@ const EditView = ({
         updatedMessages.push({
           role: inputRole,
           content: _content,
-          attachments: attachments.map<Attachment>(file => ({
+          attachments: attachments.map(file => ({
             name: file.name,
             type: file.type,
             size: file.size,
@@ -103,7 +96,7 @@ const EditView = ({
       resetTextAreaHeight();
     } else {
       updatedMessages[messageIndex].content = _content;
-      updatedMessages[messageIndex].attachments = attachments.map<Attachment>(file => ({
+      updatedMessages[messageIndex].attachments = attachments.map(file => ({
         name: file.name,
         type: file.type,
         size: file.size,
@@ -193,7 +186,14 @@ const EditView = ({
         </div>
       </div>
       
-     
+      {isModalOpen && (
+        <PopupModal
+          setIsModalOpen={setIsModalOpen}
+          title={t('warning') as string}
+          message={t('clearMessageWarning') as string}
+          handleConfirm={handleGenerate}
+        />
+      )}
     </>
   );
 };
