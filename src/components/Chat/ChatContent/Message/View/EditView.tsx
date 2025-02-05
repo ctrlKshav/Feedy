@@ -9,6 +9,7 @@ import { ChatInterface } from '@type/chat';
 import PopupModal from '@components/PopupModal';
 import TokenCount from '@components/TokenCount';
 import CommandPrompt from '../CommandPrompt';
+import { Send } from 'lucide-react';
 
 const EditView = ({
   content,
@@ -110,17 +111,26 @@ const EditView = ({
             : ''
         }`}
       >
-        <textarea
-          ref={textareaRef}
-          className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden focus:ring-0 focus-visible:ring-0 leading-7 w-full placeholder:text-gray-500/40'
-          onChange={(e) => {
-            _setContent(e.target.value);
-          }}
-          value={_content}
-          placeholder={t('submitPlaceholder') as string}
-          onKeyDown={handleKeyDown}
-          rows={1}
-        ></textarea>
+        <div className='flex items-end gap-2'>
+          <textarea
+            ref={textareaRef}
+            className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden focus:ring-0 focus-visible:ring-0 leading-7 w-full placeholder:text-gray-500/40'
+            onChange={(e) => {
+              _setContent(e.target.value);
+            }}
+            value={_content}
+            placeholder={t('submitPlaceholder') as string}
+            onKeyDown={handleKeyDown}
+            rows={1}
+          ></textarea>
+          <button
+            onClick={handleGenerate}
+            className='flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50'
+            disabled={useStore.getState().generating}
+          >
+            <Send className='w-5 h-5' />
+          </button>
+        </div>
       </div>
       
       {isModalOpen && (
