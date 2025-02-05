@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { BrowserRouter } from "react-router";
+
 import useStore from '@store/store';
 import i18n from './i18n';
 
@@ -10,6 +12,7 @@ import { ChatInterface } from '@type/chat';
 import { Theme } from '@type/theme';
 import ApiPopup from '@components/ApiPopup';
 import Toast from '@components/Toast';
+
 
 function App() {
   const initialiseNewChat = useInitialiseNewChat();
