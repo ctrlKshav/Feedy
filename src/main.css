@@ -24,6 +24,12 @@
     --tw-bg-opacity: 1;
     background-color: rgba(32, 33, 35, var(--tw-bg-opacity));
   }
+  
+  /* Add sidebar specific styling */
+  .sidebar {
+    background-color: #343541; /* gray-800 */
+    border-right: 1px solid #40414f; /* gray-700 */
+  }
 
   #root {
     height: 100%;
