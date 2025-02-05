@@ -48,14 +48,14 @@ const ChatContent = () => {
   const { error } = useSubmit();
 
   return (
-    <div className='flex-1 flex flex-col h-full'>
+    <div className='flex-1 flex flex-col h-full bg-gray-900'>
       <div className='flex-1 overflow-y-auto'>
         <ScrollToBottom
           className='h-full dark:bg-gray-900'
           followButtonClassName='hidden'
         >
           <ScrollToBottomButton />
-          <div className='flex flex-col items-center text-sm dark:bg-gray-800 min-h-full'>
+          <div className='flex flex-col items-center text-sm bg-gray-900 min-h-full'>
             <div
               className='flex flex-col items-center text-sm dark:bg-gray-800 w-full'
               ref={saveRef}
