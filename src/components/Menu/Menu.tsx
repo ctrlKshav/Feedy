@@ -19,6 +19,7 @@ const Menu = () => {
 
   useEffect(() => {
     if (window.innerWidth < 768) setHideSideMenu(true);
+    else setHideSideMenu(false)
     window.addEventListener('resize', () => {
       if (
         windowWidthRef.current !== window.innerWidth &&
@@ -48,33 +49,8 @@ const Menu = () => {
             </nav>
           </div>
         </div>
-        <div
-          id='menu-close'
-          className={`${
-            hideSideMenu ? 'hidden' : ''
-          } md:hidden absolute z-[999] right-0 translate-x-full top-10 bg-gray-900 p-2 cursor-pointer hover:bg-black text-white`}
-          onClick={() => {
-            setHideSideMenu(true);
-          }}
-        >
-          <CrossIcon2 />
-        </div>
-        <div
-          className={`${
-            hideSideMenu ? 'opacity-100' : 'opacity-0'
-          } group/menu md:group-hover/menu:opacity-100 max-md:hidden transition-opacity absolute z-[999] right-0 translate-x-full top-10 bg-gray-900 p-2 cursor-pointer hover:bg-black text-white ${
-            hideSideMenu ? '' : 'rotate-90'
-          }`}
-          onClick={() => {
-            setHideSideMenu(!hideSideMenu);
-          }}
-        >
-          {hideSideMenu ? (
-            <MenuIcon className='h-4 w-4' />
-          ) : (
-            <DownArrow className='h-4 w-4' />
-          )}
-        </div>
+       
+        
       </div>
       <div
         id='menu-backdrop'
