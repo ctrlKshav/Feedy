@@ -3,15 +3,10 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import useStore from '@store/store';
 
 import ScrollToBottomButton from './ScrollToBottomButton';
-import ChatTitle from './ChatTitle';
 import Message from './Message';
-import NewMessageButton from './Message/NewMessageButton';
-import CrossIcon from '@icon/CrossIcon';
+import InputMessage from './Message/InputMessage';
 
 import useSubmit from '@hooks/useSubmit';
-import DownloadChat from './DownloadChat';
-import CloneChat from './CloneChat';
-import ShareGPT from '@components/ShareGPT';
 
 const ChatContent = () => {
   const inputRole = useStore((state) => state.inputRole);
@@ -82,11 +77,10 @@ const ChatContent = () => {
       </div>
       
       <div className='w-full flex-shrink-0 mt-auto'>
-        <Message
+        <InputMessage
           role={inputRole}
           content=''
           messageIndex={stickyIndex}
-          sticky
         />
         {/* {error !== '' && (
           <div className='relative py-2 px-3 w-3/5 mt-3 max-md:w-11/12 border rounded-md border-red-500 bg-red-500/10 mx-auto'>
