@@ -27,8 +27,6 @@ import RefreshButton from './Button/RefreshButton';
 import UpButton from './Button/UpButton';
 import DownButton from './Button/DownButton';
 import CopyButton from './Button/CopyButton';
-import EditButton from './Button/EditButton';
-import DeleteButton from './Button/DeleteButton';
 import MarkdownModeButton from './Button/MarkdownModeButton';
 
 import CodeBlock from '../CodeBlock';
@@ -138,20 +136,8 @@ const ContentView = memo(
         <div className='flex justify-end gap-2 w-full mt-2'>
           {isDelete || (
             <>
-              {!useStore.getState().generating &&
-                role === 'assistant' &&
-                messageIndex === lastMessageIndex && (
-                  <RefreshButton onClick={handleRefresh} />
-                )}
-              {messageIndex !== 0 && <UpButton onClick={handleMoveUp} />}
-              {messageIndex !== lastMessageIndex && (
-                <DownButton onClick={handleMoveDown} />
-              )}
-
               <MarkdownModeButton />
               <CopyButton onClick={handleCopy} />
-              <EditButton setIsEdit={setIsEdit} />
-              <DeleteButton setIsDelete={setIsDelete} />
             </>
           )}
           {isDelete && (

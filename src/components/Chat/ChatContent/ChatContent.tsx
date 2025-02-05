@@ -51,7 +51,7 @@ const ChatContent = () => {
     <div className='flex-1 flex flex-col h-full'>
       <div className='flex-1 overflow-y-auto'>
         <ScrollToBottom
-          className='h-full dark:bg-gray-800'
+          className='h-full dark:bg-gray-900'
           followButtonClassName='hidden'
         >
           <ScrollToBottomButton />
