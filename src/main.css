@@ -22,7 +22,7 @@
   .dark body,
   .dark html {
     --tw-bg-opacity: 1;
-    background-color: rgba(52, 53, 65, var(--tw-bg-opacity));
+    background-color: rgba(32, 33, 35, var(--tw-bg-opacity));
   }
 
   #root {
@@ -234,6 +234,17 @@
     margin-left: -1rem;
     position: absolute;
   }
+}
+.user-message {
+  background-color: #40414f;
+}
+
+.assistant-message {
+  background-color: #343541;
+}
+
+.markdown pre {
+  background-color: #1a1b26 !important;
 }
 
 :not(pre) > code.hljs,
