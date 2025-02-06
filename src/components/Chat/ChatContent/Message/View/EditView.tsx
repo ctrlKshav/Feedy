@@ -7,10 +7,10 @@ import useSubmit from '@hooks/useSubmit';
 import { ChatInterface } from '@type/chat';
 
 import PopupModal from '@components/PopupModal';
-import TokenCount from '@components/TokenCount';
-import CommandPrompt from '../CommandPrompt';
 import { Send, Paperclip } from 'lucide-react';
 import StopGeneratingButton from '@components/StopGeneratingButton/StopGeneratingButton';
+
+import supabase from '@utils/supabase';
 
 const EditView = ({
   content,
@@ -23,6 +23,84 @@ const EditView = ({
   messageIndex: number;
   sticky?: boolean;
 }) => {
+  const setGenerating = useStore((state) => state.setGenerating);
+
+  useEffect( () =>  {
+    const func = async () => {
+      console.log("test1")
+      // if (useStore.getState().generating) return;
+      const updatedChats: ChatInterface[] = JSON.parse(
+        JSON.stringify(useStore.getState().chats)
+      );
+      console.log("test2")
+      console.log(updatedChats)
+      const updatedMessages = updatedChats[currentChatIndex].messages;
+      console.log("test3")
+      console.log(updatedMessages)
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: "user@gmail.com",
+        password: "realuser"
+      });
+    if (authError) {
+      console.error('Error fetching user:', authError);
+    }
+    console.log(authData)
+
+    const { data: threadsData, error: threadsError } = await supabase
+      .from('threads')
+      .select(`
+        id,
+        user_id,
+        messages (
+          id,
+          content,
+          created_at,
+          user_id,
+          admin_id,
+          role,
+          thread_id
+        )
+      `)
+      .eq('user_id', authData.user?.id);
+      console.log("test4")
+      console.log(threadsData)
+      // console.log(threadsData[0].messages[0].role)
+      
+      if(threadsData) {
+      const threadMessages = threadsData[0].messages || [];
+      
+      // Sort messages by created_at timestamp
+      const sortedMessages = threadMessages.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+      
+      const lastMessage = sortedMessages[sortedMessages.length - 1];
+
+
+      sortedMessages.map((message) => {
+        
+        updatedMessages.push({
+          role: message.role,
+          content: message.content,
+          attachments: attachments.map(file => ({
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            url: URL.createObjectURL(file)
+          }))
+        });
+
+      });
+    }
+      
+      
+      console.log("test5")
+      console.log(updatedMessages)
+      setChats(updatedChats);
+      // handleSubmit(attachments[0], _content)
+
+  }
+  func()
+  },[])
+
   const inputRole = useStore((state) => state.inputRole);
   const setChats = useStore((state) => state.setChats);
   const currentChatIndex = useStore((state) => state.currentChatIndex);
@@ -32,7 +110,6 @@ const EditView = ({
   const textareaRef = React.createRef<HTMLTextAreaElement>();
   const [attachments, setAttachments] = useState<File[]>([]);
 
-  const setGenerating = useStore((state) => state.setGenerating);
   const generating = useStore((state) => state.generating);
 
   const { t } = useTranslation();

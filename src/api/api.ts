@@ -18,6 +18,11 @@ export const getImageAnalysis = async (
     body: formData,
   });
 
+  // const response = await fetch('https://backend-sparkling-flower-4578.fly.dev/analyze-image', {
+  //   method: 'POST',
+  //   body: formData,
+  // });
+
   if (!response.ok) {
     const errorText = await response.text();
     throw new Error(errorText);

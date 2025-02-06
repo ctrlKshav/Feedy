@@ -9,12 +9,12 @@ import './i18n';
 import { BrowserRouter, Routes, Route } from 'react-router';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+  <>
     <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />} />
       <Route path="/admin" element={<Admin />} />
     </Routes>
     </BrowserRouter>
-  </React.StrictMode>
+  </>
 );
