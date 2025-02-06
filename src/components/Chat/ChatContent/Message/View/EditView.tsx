@@ -136,6 +136,18 @@ const EditView = ({
         }`}
       >
         <div className='flex items-end gap-2'>
+          <div className="flex gap-2">
+            <label className="flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+              <Paperclip className="w-5 h-5" />
+              <input
+                type="file"
+                multiple
+                onChange={handleAttachment}
+                className="hidden"
+                accept="image/*,.pdf,.doc,.docx,.txt"
+              />
+            </label>
+          </div>
           <div className="relative flex-1">
             <textarea
               ref={textareaRef}
@@ -158,31 +170,19 @@ const EditView = ({
                       className="ml-2 text-red-500 hover:text-red-700"
                     >
                       ×
-                  </button>
+                    </button>
                   </div>
                 ))}
               </div>
             )}
           </div>
-          <div className="flex gap-2">
-            <label className="flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
-              <Paperclip className="w-5 h-5" />
-              <input
-                type="file"
-                multiple
-                onChange={handleAttachment}
-                className="hidden"
-                accept="image/*,.pdf,.doc,.docx,.txt"
-              />
-            </label>
-            <button
-              onClick={handleGenerate}
-              className='flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50'
-              disabled={useStore.getState().generating}
-            >
-              <Send className='w-5 h-5' />
-            </button>
-          </div>
+          <button
+            onClick={handleGenerate}
+            className='flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50'
+            disabled={useStore.getState().generating}
+          >
+            <Send className='w-5 h-5' />
+          </button>
         </div>
       </div>
       
