@@ -59,7 +59,7 @@ export const ExamplePromptsComponent: React.FC = () => {
     setChats(updatedChats);
     
     // Then trigger the submission
-    handleSubmit();
+    handleSubmit(new File([], 'prompt'), prompt);
   };
 
   const containerVariants = {
