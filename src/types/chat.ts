@@ -1,7 +1,7 @@
 import { Prompt } from './prompt';
 import { Theme } from './theme';
 
-export type Role = 'user' | 'assistant' | 'system';
+export type Role = 'user' | 'assistant' | 'system' | 'admin';
 export const roles: Role[] = ['user', 'assistant', 'system'];
 
 export interface Attachment {

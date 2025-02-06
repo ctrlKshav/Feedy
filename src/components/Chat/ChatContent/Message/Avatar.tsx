@@ -9,6 +9,7 @@ const Avatar = React.memo(({ role }: { role: Role }) => {
       {role === 'user' && <UserAvatar />}
       {role === 'assistant' && <AssistantAvatar />}
       {role === 'system' && <SystemAvatar />}
+      {role === 'admin' && <AdminAvatar />}
     </div>
   );
 });
@@ -46,7 +47,7 @@ const SystemAvatar = () => {
   );
 };
 
-const ManagerAvatar = () => {
+const AdminAvatar = () => {
   return (
     <div
       className='relative h-[30px] w-[30px] p-1 rounded-full text-white flex items-center justify-center'
