@@ -5,41 +5,28 @@ import { motion } from "framer-motion";
 import useSubmit from '@hooks/useSubmit';
 
 interface Prompt {
-  title: string;
   examples: string[];
 }
 
 const prompts: Prompt[] = [
   {
-    title: "Explain technical concepts",
     examples: [
-      "Explain quantum computing in simple terms",
-      "What is the difference between HTTP and HTTPS?",
-      "How does a blockchain work?",
+      "What do you think about the color scheme used in this design?",
     ],
   },
   {
-    title: "Creative writing tasks",
     examples: [
-      "Write a short story about a time traveler",
-      "Compose a poem about the changing seasons",
-      "Create a dialogue between two AI assistants",
+      "How can the layout be improved for better user experience?",
     ],
   },
   {
-    title: "Problem-solving scenarios",
     examples: [
-      "How can I improve my productivity?",
-      "Suggest ways to reduce plastic waste",
-      "What are some strategies for effective team communication?",
+      "What are your thoughts on the typography choices in this design?",
     ],
   },
   {
-    title: "Code and development",
     examples: [
-      "Write a Python function to check if a number is prime",
-      "Explain the concept of React hooks",
-      "How do I set up a basic Express.js server?",
+      "Can you suggest any enhancements for the overall visual appeal?",
     ],
   },
 ];
@@ -109,7 +96,7 @@ export const ExamplePromptsComponent: React.FC = () => {
         className="text-2xl font-bold text-center mb-8 text-gray-800 dark:text-gray-200"
         variants={itemVariants}
       >
-        {t('Try it out!')}
+        {t('Explore Your Creativity!')}
       </motion.h2>
       
       <motion.div 
@@ -124,12 +111,12 @@ export const ExamplePromptsComponent: React.FC = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="p-4 bg-gray-50 dark:bg-gray-700">
+            {/* <div className="p-4 bg-gray-50 dark:bg-gray-700">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                 {category.title}
               </h3>
-            </div>
-            <div className="p-4 space-y-3">
+            </div> */}
+            <div className="">
               {category.examples.map((example, exampleIndex) => (
                 <motion.button
                   key={exampleIndex}
