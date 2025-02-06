@@ -6,6 +6,7 @@ import i18n from './i18n';
 
 import Chat from '@components/Chat';
 import Menu from '@components/Menu';
+import Menu1 from '@components/Menu/Menu1';
 
 import useInitialiseNewChat from '@hooks/useInitialiseNewChat';
 import { ChatInterface } from '@type/chat';
@@ -79,7 +80,7 @@ function App() {
 
   return (
     <div className='overflow-hidden w-full h-full relative'>
-      <Menu />
+      <Menu1 />
       <Chat />
       <ApiPopup />
       <Toast />
