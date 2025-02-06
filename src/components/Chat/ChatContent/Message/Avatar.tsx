@@ -17,7 +17,7 @@ const UserAvatar = () => {
   return (
     <div
       className='relative h-[30px] w-[30px] p-1 rounded-full text-white flex items-center justify-center'
-      style={{ backgroundColor: 'rgb(30, 30, 50)' }}
+      style={{ backgroundColor: '#7700ff' }}
     >
       <PersonIcon />
     </div>
@@ -28,7 +28,7 @@ const AssistantAvatar = () => {
   return (
     <div
       className='relative h-[30px] w-[30px] p-1 rounded-full text-white flex items-center justify-center'
-      style={{ backgroundColor: 'rgb(245, 245, 245)' }}
+      style={{ backgroundColor: '#26b34b' }}
     >
       <img src='https://upload.wikimedia.org/wikipedia/commons/5/56/Feedly-logo.png' alt='Assistant Avatar' className='h-5 w-5' />
     </div>
