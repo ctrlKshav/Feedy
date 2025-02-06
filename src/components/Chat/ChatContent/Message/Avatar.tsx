@@ -30,7 +30,7 @@ const AssistantAvatar = () => {
       className='relative h-[30px] w-[30px] p-1 rounded-full text-white flex items-center justify-center'
       style={{ backgroundColor: 'rgb(245, 245, 245)' }}
     >
-      <img src='https://img.icons8.com/?size=100&id=YriNKtKNL9NW&format=png&color=000000' alt='Assistant Avatar' className='h-5 w-5' />
+      <img src='https://upload.wikimedia.org/wikipedia/commons/5/56/Feedly-logo.png' alt='Assistant Avatar' className='h-5 w-5' />
     </div>
   );
 };
