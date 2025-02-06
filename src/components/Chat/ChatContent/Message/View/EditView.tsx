@@ -28,12 +28,15 @@ const EditView = ({
   useEffect( () =>  {
     const func = async () => {
       console.log("test1")
-      // if (useStore.getState().generating) return;
+      if (useStore.getState().generating) return;
       const updatedChats: ChatInterface[] = JSON.parse(
         JSON.stringify(useStore.getState().chats)
       );
       console.log("test2")
-      console.log(updatedChats)
+      updatedChats.forEach((chat) => {
+        console.log(chat.id)
+      });
+      // console.log(updatedChats)
       const updatedMessages = updatedChats[currentChatIndex].messages;
       console.log("test3")
       console.log(updatedMessages)
@@ -44,7 +47,7 @@ const EditView = ({
     if (authError) {
       console.error('Error fetching user:', authError);
     }
-    console.log(authData)
+    // console.log(authData)
 
     const { data: threadsData, error: threadsError } = await supabase
       .from('threads')
@@ -62,38 +65,46 @@ const EditView = ({
         )
       `)
       .eq('user_id', authData.user?.id);
-      console.log("test4")
-      console.log(threadsData)
+      // console.log("test4")
+      // console.log(threadsData)
       // console.log(threadsData[0].messages[0].role)
       
       if(threadsData) {
-      const threadMessages = threadsData[0].messages || [];
-      
-      // Sort messages by created_at timestamp
-      const sortedMessages = threadMessages.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-      
-      const lastMessage = sortedMessages[sortedMessages.length - 1];
 
-
-      sortedMessages.map((message) => {
+        console.log(updatedChats[currentChatIndex].id)
+        threadsData.forEach((thread) => {
+          if(thread.id === updatedChats[currentChatIndex].id) {
+            console.log("found")
+            console.log(thread.id)
+            const threadMessages = thread.messages || [];
         
-        updatedMessages.push({
-          role: message.role,
-          content: message.content,
-          attachments: attachments.map(file => ({
-            name: file.name,
-            type: file.type,
-            size: file.size,
-            url: URL.createObjectURL(file)
-          }))
-        });
+            // Sort messages by created_at timestamp
+            const sortedMessages = threadMessages.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+            
+            const lastMessage = sortedMessages[sortedMessages.length - 1];
 
-      });
-    }
+
+            sortedMessages.map((message) => {
+              
+              updatedMessages.push({
+                role: message.role,
+                content: message.content,
+                attachments: attachments.map(file => ({
+                  name: file.name,
+                  type: file.type,
+                  size: file.size,
+                  url: URL.createObjectURL(file)
+                }))
+              });
+
+            });
+            }
+          });
+        }
       
       
-      console.log("test5")
-      console.log(updatedMessages)
+      // console.log("test5")
+      // console.log(updatedMessages)
       setChats(updatedChats);
       // handleSubmit(attachments[0], _content)
 

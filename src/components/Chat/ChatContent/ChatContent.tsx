@@ -33,8 +33,8 @@ const ChatContent = () => {
 
   const hasUserMessages = messages.some(message => message.role === 'user');
 
-  console.log("real")
-  console.log( messages)
+  // console.log("real")
+  // console.log( messages)
   
   
   useEffect(() => {
