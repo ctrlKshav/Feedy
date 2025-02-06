@@ -78,7 +78,7 @@ const ContentView = memo(
     const generating = useStore.getState().generating;
     
     const currentMessage = messages?.[messageIndex];
-  const attachments = currentMessage?.attachments;
+    const attachments = currentMessage?.attachments;
 
     const handleDelete = () => {
       const updatedChats: ChatInterface[] = JSON.parse(
