@@ -47,18 +47,22 @@ const getFileIcon = (type: string) => {
   return <File className="w-4 h-4" />;
 };
 
+interface ContentViewProps {
+  role: string;
+  content: string;
+  setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
+  messageIndex: number;
+}
+
 const ContentView = memo(
   ({
     role,
     content,
     setIsEdit,
     messageIndex,
-  }: {
-    role: string;
-    content: string;
-    setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
-    messageIndex: number;
-  }) => {
+  }
+  : ContentViewProps
+) => {
     const { handleSubmit } = useSubmit();
 
     const [isDelete, setIsDelete] = useState<boolean>(false);
@@ -72,6 +76,9 @@ const ContentView = memo(
     const markdownMode = useStore((state) => state.markdownMode);
     const messages = useStore((state) => state.chats?.[currentChatIndex]?.messages ?? []);
     const generating = useStore.getState().generating;
+    
+    const currentMessage = messages?.[messageIndex];
+    const attachments = currentMessage?.attachments;
 
     const handleDelete = () => {
       const updatedChats: ChatInterface[] = JSON.parse(
@@ -88,27 +95,54 @@ const ContentView = memo(
     return (
       <div className='relative flex flex-col gap-3 pb-2'>
         <div className='markdown prose w-full break-words dark:prose-invert dark'>
-          {content}
-          {messages[messageIndex]?.attachments?.length > 0 && (
-            <div className="mt-2 flex  flex-wrap gap-2 justify-end">
-              {messages[messageIndex].attachments?.map((attachment: Attachment, index: number) => (
-                <a
-                  key={index}
-                  href={attachment.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 p-2 text-sm rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-700 no-underline text-white"
-                >
-                  {getFileIcon(attachment.type)}
-                  <span className="text-xs text-black dark:text-white ">
-                    {attachment.name.length > 20 
-                      ? `${attachment.name.substring(0, 15)}...${attachment.name.split('.').pop()}`
-                      : attachment.name}
-                  </span>
-                </a>
-              ))}
-            </div>
-          )}
+        {markdownMode ? (
+          <ReactMarkdown
+            remarkPlugins={[
+              remarkGfm,
+              [remarkMath, { singleDollarTextMath: inlineLatex }],
+            ]}
+            rehypePlugins={[
+              rehypeKatex,
+              [
+                rehypeHighlight,
+                {
+                  detect: true,
+                  ignoreMissing: true,
+                  subset: codeLanguageSubset,
+                },
+              ],
+            ]}
+            linkTarget='_new'
+            components={{
+              code,
+              p,
+            }}
+          >
+            {content}
+          </ReactMarkdown>
+        ) : (
+          <span className='whitespace-pre-wrap'>{content}</span>
+        )}
+          {attachments && attachments.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-2 justify-end">
+            {attachments.map((attachment: Attachment, index: number) => (
+              <a
+                key={index}
+                href={attachment.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 p-2 text-sm rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-700 no-underline text-white"
+              >
+                {getFileIcon(attachment.type)}
+                <span className="text-xs text-black dark:text-white">
+                  {attachment.name.length > 20 
+                    ? `${attachment.name.substring(0, 15)}...${attachment.name.split('.').pop()}`
+                    : attachment.name}
+                </span>
+              </a>
+            ))}
+          </div>
+        )}
         </div>
         <div className={`flex ${role === "user" ? "justify-end" : "justify-start"} gap-2 w-full mt-2 `}>
           {isDelete || (

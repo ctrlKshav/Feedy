@@ -7,6 +7,7 @@ export const roles: Role[] = ['user', 'assistant', 'system'];
 export interface Attachment {
   url: string;
   type: string;
+  size?: number;
   name: string;
 }
 
