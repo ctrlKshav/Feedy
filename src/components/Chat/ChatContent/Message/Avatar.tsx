@@ -13,16 +13,16 @@ const Avatar = React.memo(({ role }: { role: Role }) => {
   );
 });
 
-const UserAvatar = () => {
-  return (
-    <div
-      className='relative h-[30px] w-[30px] p-1 rounded-full text-white flex items-center justify-center'
-      style={{ backgroundColor: '#7700ff' }}
-    >
-      <PersonIcon />
-    </div>
-  );
-};
+// const UserAvatar = () => {
+//   return (
+//     <div
+//       className='relative h-[30px] w-[30px] p-1 rounded-full text-white flex items-center justify-center'
+//       style={{ backgroundColor: '#7700ff' }}
+//     >
+//       <PersonIcon />
+//     </div>
+//   );
+// };
 
 const AssistantAvatar = () => {
   return (
@@ -42,6 +42,17 @@ const SystemAvatar = () => {
       style={{ backgroundColor: 'rgb(126, 163, 227)' }}
     >
       <SettingIcon />
+    </div>
+  );
+};
+
+const ManagerAvatar = () => {
+  return (
+    <div
+      className='relative h-[30px] w-[30px] p-1 rounded-full text-white flex items-center justify-center'
+      style={{ backgroundColor: 'rgb(255, 255, 255)' }}
+    >
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROxV0RccSGjqAQPEDjdc3J88bagOcEUuAWqA&s" alt='Manager Avatar' className='h-full w-full image' />
     </div>
   );
 };
