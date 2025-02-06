@@ -106,7 +106,7 @@ export const ExamplePromptsComponent: React.FC = () => {
         {prompts.map((category, categoryIndex) => (
           <motion.div
             key={categoryIndex}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden"
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-4"
             variants={itemVariants}
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
@@ -116,11 +116,11 @@ export const ExamplePromptsComponent: React.FC = () => {
                 {category.title}
               </h3>
             </div> */}
-            <div className="">
+            <div>
               {category.examples.map((example, exampleIndex) => (
                 <motion.button
                   key={exampleIndex}
-                  className="w-full text-left p-3 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm transition-colors"
+                  className="w-full text-left p-4 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm transition-colors"
                   onClick={() => handlePromptClick(example)}
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
