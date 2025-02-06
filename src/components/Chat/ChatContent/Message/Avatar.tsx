@@ -13,16 +13,16 @@ const Avatar = React.memo(({ role }: { role: Role }) => {
   );
 });
 
-// const UserAvatar = () => {
-//   return (
-//     <div
-//       className='relative h-[30px] w-[30px] p-1 rounded-full text-white flex items-center justify-center'
-//       style={{ backgroundColor: '#7700ff' }}
-//     >
-//       <PersonIcon />
-//     </div>
-//   );
-// };
+const UserAvatar = () => {
+  return (
+    <div
+      className='relative h-[30px] w-[30px] p-1 rounded-full text-white flex items-center justify-center'
+      style={{ backgroundColor: '#7700ff' }}
+    >
+      <PersonIcon />
+    </div>
+  );
+};
 
 const AssistantAvatar = () => {
   return (
