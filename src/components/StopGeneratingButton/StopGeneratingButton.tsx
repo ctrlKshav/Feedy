@@ -5,7 +5,7 @@ const StopGeneratingButton = () => {
   const setGenerating = useStore((state) => state.setGenerating);
   const generating = useStore((state) => state.generating);
 
-  return generating ? (
+  return (
   
       <button
         className='flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50'
@@ -28,9 +28,7 @@ const StopGeneratingButton = () => {
           </svg>
         
       </button>
-  ) : (
-    <></>
-  );
+  )
 };
 
 export default StopGeneratingButton;
