@@ -6,15 +6,12 @@ const StopGeneratingButton = () => {
   const generating = useStore((state) => state.generating);
 
   return generating ? (
-    <div
-      className='absolute bottom-6 left-0 right-0 m-auto flex md:w-full md:m-auto gap-0 md:gap-2 justify-center'
-      onClick={() => setGenerating(false)}
-    >
+  
       <button
-        className='btn relative btn-neutral border-0 md:border'
+        className='flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50'
         aria-label='stop generating'
+        onClick={() => setGenerating(false)}
       >
-        <div className='flex w-full items-center justify-center gap-2'>
           <svg
             stroke='currentColor'
             fill='none'
@@ -29,10 +26,8 @@ const StopGeneratingButton = () => {
           >
             <rect x='3' y='3' width='18' height='18' rx='2' ry='2'></rect>
           </svg>
-          Stop generating
-        </div>
+        
       </button>
-    </div>
   ) : (
     <></>
   );

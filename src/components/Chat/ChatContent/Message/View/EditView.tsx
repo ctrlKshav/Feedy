@@ -10,6 +10,7 @@ import PopupModal from '@components/PopupModal';
 import TokenCount from '@components/TokenCount';
 import CommandPrompt from '../CommandPrompt';
 import { Send, Paperclip } from 'lucide-react';
+import StopGeneratingButton from '@components/StopGeneratingButton/StopGeneratingButton';
 
 const EditView = ({
   content,
@@ -30,6 +31,9 @@ const EditView = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const textareaRef = React.createRef<HTMLTextAreaElement>();
   const [attachments, setAttachments] = useState<File[]>([]);
+
+  const setGenerating = useStore((state) => state.setGenerating);
+  const generating = useStore((state) => state.generating);
 
   const { t } = useTranslation();
 
@@ -176,13 +180,19 @@ const EditView = ({
               </div>
             )}
           </div>
-          <button
+          {generating ? (
+            <StopGeneratingButton />
+          ) : (
+            <button
             onClick={handleGenerate}
             className='flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50'
-            disabled={useStore.getState().generating}
+            disabled={useStore.getState().generating || _content === ''}
           >
             <Send className='w-5 h-5' />
           </button>
+          )}
+
+          
         </div>
       </div>
       
