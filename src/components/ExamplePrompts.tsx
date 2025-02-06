@@ -106,7 +106,7 @@ export const ExamplePromptsComponent: React.FC = () => {
         {prompts.map((category, categoryIndex) => (
           <motion.div
             key={categoryIndex}
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-4"
+            className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden mb-4"
             variants={itemVariants}
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
