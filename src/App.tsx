@@ -80,7 +80,7 @@ function App() {
 
   return (
     <div className='overflow-hidden w-full h-full relative'>
-      <Menu1 />
+      <Menu />
       <Chat />
       {/* <ApiPopup /> */}
       <Toast />
