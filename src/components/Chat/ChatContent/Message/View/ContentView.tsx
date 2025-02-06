@@ -95,7 +95,34 @@ const ContentView = memo(
     return (
       <div className='relative flex flex-col gap-3 pb-2'>
         <div className='markdown prose w-full break-words dark:prose-invert dark'>
-          {content}
+        {markdownMode ? (
+          <ReactMarkdown
+            remarkPlugins={[
+              remarkGfm,
+              [remarkMath, { singleDollarTextMath: inlineLatex }],
+            ]}
+            rehypePlugins={[
+              rehypeKatex,
+              [
+                rehypeHighlight,
+                {
+                  detect: true,
+                  ignoreMissing: true,
+                  subset: codeLanguageSubset,
+                },
+              ],
+            ]}
+            linkTarget='_new'
+            components={{
+              code,
+              p,
+            }}
+          >
+            {content}
+          </ReactMarkdown>
+        ) : (
+          <span className='whitespace-pre-wrap'>{content}</span>
+        )}
           {attachments && attachments.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-2 justify-end">
             {attachments.map((attachment: Attachment, index: number) => (
