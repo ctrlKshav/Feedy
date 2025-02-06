@@ -4,9 +4,16 @@ import { Theme } from './theme';
 export type Role = 'user' | 'assistant' | 'system';
 export const roles: Role[] = ['user', 'assistant', 'system'];
 
+export interface Attachment {
+  url: string;
+  type: string;
+  name: string;
+}
+
 export interface MessageInterface {
   role: Role;
   content: string;
+  attachments?: Attachment[];
 }
 
 export interface ChatInterface {

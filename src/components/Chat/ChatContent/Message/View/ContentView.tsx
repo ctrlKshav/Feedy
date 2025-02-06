@@ -34,11 +34,7 @@ import MarkdownModeButton from './Button/MarkdownModeButton';
 import CodeBlock from '../CodeBlock';
 import { Paperclip, FileText, Image, File, FileCode, FileSpreadsheet, FileAudio, FileVideo } from 'lucide-react';
 
-interface Attachment {
-  url: string;
-  type: string;
-  name: string;
-}
+import { Attachment } from '@type/chat';
 
 const getFileIcon = (type: string) => {
   if (type.startsWith('image/')) return <Image className="w-4 h-4" />;
