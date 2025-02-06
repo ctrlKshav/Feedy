@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import useStore from '@store/store';
-
 import ScrollToBottomButton from './ScrollToBottomButton';
 import Message from './Message';
 import InputMessage from './Message/InputMessage';
-
 import useSubmit from '@hooks/useSubmit';
+import { ExamplePromptsComponent } from '@components/ExamplePrompts';
 
 const ChatContent = () => {
   const inputRole = useStore((state) => state.inputRole);
@@ -30,8 +29,9 @@ const ChatContent = () => {
   const advancedMode = false;
   const generating = useStore.getState().generating;
   const hideSideMenu = useStore((state) => state.hideSideMenu);
-
   const saveRef = useRef<HTMLDivElement>(null);
+
+  const hasUserMessages = messages.some(message => message.role === 'user');
 
   useEffect(() => {
     if (generating) {
@@ -42,7 +42,7 @@ const ChatContent = () => {
   const { error } = useSubmit();
 
   return (
-    <div className='flex-1 flex flex-col h-full'>
+    <div className='flex-1 flex flex-col h-full relative'>
       <div className='flex-1 overflow-y-auto'>
         <ScrollToBottom className='h-full dark:bg-gray-800' followButtonClassName='hidden'>
           <ScrollToBottomButton />
@@ -56,11 +56,15 @@ const ChatContent = () => {
                 )
               ))}
             </div>
+            {!hasUserMessages && (
+              <div className="w-full">
+                <ExamplePromptsComponent />
+              </div>
+            )}
           </div>
         </ScrollToBottom>
       </div>
-      
-      <div className='w-full flex-shrink-0 mt-auto'>
+      <div className='w-full dark:bg-gray-800'>
         <InputMessage role={inputRole} content='' messageIndex={stickyIndex} />
       </div>
     </div>
