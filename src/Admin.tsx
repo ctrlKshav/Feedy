@@ -16,7 +16,7 @@ import { authLoader, fetchUserId } from '@utils/auth';
 import { fetchConversationsFromSupabase } from '@utils/supabaseOperations';
 import useInitialiseNewAdminChat from '@hooks/admin/useInitialiseNewAdminChat';
 import useAddAdminChat from '@hooks/admin/useAddAdminChat';
-import { useAuth } from './context/AuthProvider';
+import { useAuth } from './context/UserAuthProvider';
 
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
@@ -30,16 +30,14 @@ function Admin() {
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
   const chats = useStore.getState().chats;
   const currentChatIndex = useStore.getState().currentChatIndex;
+  const {user, adminId} = useAuth();
   
 
   
   useEffect(() => {
     const func = async () => {
 
-      const {data} = await login("admin@gmail.com", "realadmin")
-      const {fetchedData, fetchError} = await fetchUserId("user@gmail.com")
-      console.log(data)
-      const {threadsData, threadsError} = await fetchConversationsFromSupabase(data.user, fetchedData?.id);    
+      const {threadsData, threadsError} = await fetchConversationsFromSupabase(user, adminId);    
       threadsData?.map((thread) => {
         chats?.forEach((chat) => {
           if(chat.id === thread.id)

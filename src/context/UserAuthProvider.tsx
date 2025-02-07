@@ -12,20 +12,23 @@ const login = (email: string, password: string) =>
 
 const signOut = () => supabase.auth.signOut();
 
-const AuthProvider = ({ children }: {children: ReactNode}) => {
+const UserAuthProvider = ({ children }: {children: ReactNode}) => {
   const [user, setUser] = useState<null | User>(null);
   const [adminId, setAdminId] = useState<null | string>(null);
-  const [auth, setAuth] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
     const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      const { user: currentUser } = data;
-      setUser(currentUser ?? null);
-      setLoading(false);
+        
+    const {data} = await login("user@gmail.com", "realpass")
+    const {fetchedData, fetchError} = await fetchUserId("admin@gmail.com")
 
+    const { user: currentUser } = data;
+    setUser(currentUser ?? null);
+    setAdminId(fetchedData?.id)
+    
+    setLoading(false);
     };
     getUser();
     // onAuthStateChange code below
@@ -34,15 +37,12 @@ const AuthProvider = ({ children }: {children: ReactNode}) => {
   return (
     <AuthContext.Provider
       value={{
-        auth,
         user,
         adminId,
-        login,
-        signOut,
       }}>
       {!loading && children}
     </AuthContext.Provider>
   );
 };
 
-export default AuthProvider;
+export default UserAuthProvider;

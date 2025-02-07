@@ -12,7 +12,7 @@ import StopGeneratingButton from '@components/StopGeneratingButton/StopGeneratin
 
 import { saveConversationToSupabase } from '@utils/supabaseOperations';
 import { authLoader, fetchUserId } from '@utils/auth';
-import { useAuth } from '@src/context/AuthProvider';
+import { useAuth } from '@src/context/UserAuthProvider';
 
 const loader = async () => {
   const {authData, authError} = await authLoader("user@gmail.com", "realuser");
@@ -33,7 +33,6 @@ const EditView = ({
 }) => {
   const setGenerating = useStore((state) => state.setGenerating);
 
-  const {user, adminId} = useAuth();
 
 
   const inputRole = useStore((state) => state.inputRole);
@@ -48,6 +47,7 @@ const EditView = ({
   const generating = useStore((state) => state.generating);
 
   const { t } = useTranslation();
+  const {user, adminId} = useAuth();
 
   const resetTextAreaHeight = () => {
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
