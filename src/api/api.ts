@@ -1,5 +1,6 @@
 // api.ts
 import { ShareGPTSubmitBodyInterface } from "@type/api";
+import { Attachment } from "@type/chat";
 export interface AnalysisResponse {
   response: string;
   status: string;

@@ -4,13 +4,20 @@ import useStore from '@store/store';
 
 import useSubmit from '@hooks/useSubmit';
 
-import { ChatInterface } from '@type/chat';
+import { Attachment, ChatInterface } from '@type/chat';
 
 import PopupModal from '@components/PopupModal';
 import { Send, Paperclip } from 'lucide-react';
 import StopGeneratingButton from '@components/StopGeneratingButton/StopGeneratingButton';
 
-import supabase from '@utils/supabase';
+import { saveConversationToSupabase } from '@utils/supabaseOperations';
+import { authLoader, fetchAdminID } from '@utils/auth';
+
+const loader = async () => {
+  const authData = await authLoader();
+  const adminData = await fetchAdminID("admin@gmail.com");
+  return { authData, adminData };
+};
 
 const EditView = ({
   content,
@@ -25,92 +32,7 @@ const EditView = ({
 }) => {
   const setGenerating = useStore((state) => state.setGenerating);
 
-  useEffect( () =>  {
-    const func = async () => {
-      console.log("test1")
-      if (useStore.getState().generating) return;
-      const updatedChats: ChatInterface[] = JSON.parse(
-        JSON.stringify(useStore.getState().chats)
-      );
-      console.log("test2")
-      updatedChats.forEach((chat) => {
-        console.log(chat.id)
-      });
-      // console.log(updatedChats)
-      const updatedMessages = updatedChats[currentChatIndex].messages;
-      console.log("test3")
-      console.log(updatedMessages)
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: "user@gmail.com",
-        password: "realuser"
-      });
-    if (authError) {
-      console.error('Error fetching user:', authError);
-    }
-    // console.log(authData)
-
-    const { data: threadsData, error: threadsError } = await supabase
-      .from('threads')
-      .select(`
-        id,
-        user_id,
-        messages (
-          id,
-          content,
-          created_at,
-          user_id,
-          admin_id,
-          role,
-          thread_id
-        )
-      `)
-      .eq('user_id', authData.user?.id);
-      // console.log("test4")
-      // console.log(threadsData)
-      // console.log(threadsData[0].messages[0].role)
-      
-      if(threadsData) {
-
-        console.log(updatedChats[currentChatIndex].id)
-        threadsData.forEach((thread) => {
-          if(thread.id === updatedChats[currentChatIndex].id) {
-            console.log("found")
-            console.log(thread.id)
-            const threadMessages = thread.messages || [];
-        
-            // Sort messages by created_at timestamp
-            const sortedMessages = threadMessages.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-            
-            const lastMessage = sortedMessages[sortedMessages.length - 1];
-
-
-            sortedMessages.map((message) => {
-              
-              updatedMessages.push({
-                role: message.role,
-                content: message.content,
-                attachments: attachments.map(file => ({
-                  name: file.name,
-                  type: file.type,
-                  size: file.size,
-                  url: URL.createObjectURL(file)
-                }))
-              });
-
-            });
-            }
-          });
-        }
-      
-      
-      // console.log("test5")
-      // console.log(updatedMessages)
-      setChats(updatedChats);
-      // handleSubmit(attachments[0], _content)
-
-  }
-  func()
-  },[])
+  const loadData = loader();
 
   const inputRole = useStore((state) => state.inputRole);
   const setChats = useStore((state) => state.setChats);
@@ -163,11 +85,21 @@ const EditView = ({
     }
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
+
     if (useStore.getState().generating) return;
     const updatedChats: ChatInterface[] = JSON.parse(
       JSON.stringify(useStore.getState().chats)
     );
+    
+    console.log("1")
+    const supabaseResponse = saveConversationToSupabase(_content, attachments , (await loadData),
+      inputRole, updatedChats, currentChatIndex
+  )
+    console.log(supabaseResponse)
+    console.log("2")
+    
+    
     const updatedMessages = updatedChats[currentChatIndex].messages;
     
     if (sticky) {

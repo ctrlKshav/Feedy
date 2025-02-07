@@ -2,7 +2,7 @@
 import React from 'react';
 import useStore from '@store/store';
 import { useTranslation } from 'react-i18next';
-import { ChatInterface } from '@type/chat';
+import { Attachment, ChatInterface } from '@type/chat';
 import { getImageAnalysis } from '@api/api';
 
 const useSubmit = () => {
