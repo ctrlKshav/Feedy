@@ -2,10 +2,6 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useStore from '@store/store';
 
-import PlusIcon from '@icon/PlusIcon';
-
-import useAddChat from '@hooks/useAddChat';
-
 const ManagePersona = () => {
   const { t } = useTranslation();
   const generating = useStore((state) => state.generating);
@@ -30,6 +26,18 @@ const ManagePersona = () => {
         onClick={() => !generating && setShowPromptModal(true)}
         title={t('Manage Persona') as string}
       >
+        <svg 
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="2"
+          className="inline-block mr-2 ml-2"
+        >
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
         <span className='inline-flex text-white text-sm'>{t('Manage Persona') as string}</span>
       </a>
 
