@@ -6,6 +6,7 @@ import NewChat from './NewChat';
 import NewFolder from './NewFolder';
 import ChatHistoryList from './ChatHistoryList';
 import MenuOptions from './MenuOptions';
+import ManagePersona from './ManagePersona';
 
 import CrossIcon2 from '@icon/CrossIcon2';
 import DownArrow from '@icon/DownArrow';
@@ -43,6 +44,7 @@ const Menu = () => {
               <div className='flex gap-2'>
                 {/* <NewChat /> */}
                 {/* <NewFolder /> */}
+                <ManagePersona />
               </div>
               <ChatHistoryList />
               <MenuOptions />
