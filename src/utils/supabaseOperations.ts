@@ -28,27 +28,49 @@ export const saveConversationToSupabase = async (user:User,adminId: string, cont
 
 }
 
-export const fetchConversationsFromSupabase = async (user:User, adminId: string ) => {
-  
-  const { data: threadsData, error: threadsError } = await supabase
-  .from('threads')
-  .select(`
-    id,
-    title,
-    user_id,
-    messages (
+export const fetchConversationsFromSupabase = async (user:(User | null), adminId: string ) => {
+  if(user?.role === "admin"){
+    const { data : threadsData, error: threadsError } = await supabase
+    .from('threads')
+    .select(`
       id,
-      content,
-      created_at,
+      title,
       user_id,
-      admin_id,
-      role,
-      thread_id
-    )
-  `)
-  .eq('admin_id', user?.id);
+      messages (
+        id,
+        content,
+        created_at,
+        user_id,
+        admin_id,
+        role,
+        thread_id
+      )
+    `)
+    .eq('admin_id', user?.id);
+    return {threadsData, threadsError}
 
-  console.log(threadsData)
-  return {threadsData, threadsError}
+  }
+  else{
+    const { data : threadsData, error: threadsError } = await supabase
+    .from('threads')
+    .select(`
+      id,
+      title,
+      user_id,
+      messages (
+        id,
+        content,
+        created_at,
+        user_id,
+        admin_id,
+        role,
+        thread_id
+      )
+    `)
+    .eq('user_id', user?.id);
+    return {threadsData, threadsError}
+  
+  }
+
 
 }

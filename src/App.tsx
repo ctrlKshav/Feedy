@@ -13,8 +13,15 @@ import { ChatInterface } from '@type/chat';
 import { Theme } from '@type/theme';
 import ApiPopup from '@components/ApiPopup';
 import Toast from '@components/Toast';
-import AuthProvider from './context/AuthProvider';
+import { fetchConversationsFromSupabase } from '@utils/supabaseOperations';
 
+import useInitialiseNewAdminChat from '@hooks/admin/useInitialiseNewAdminChat';
+import useAddAdminChat from '@hooks/admin/useAddAdminChat';
+import supabase from '@utils/supabase';
+import { fetchUserId } from '@utils/auth';
+
+const login = (email: string, password: string) =>
+  supabase.auth.signInWithPassword({ email, password });
 
 function App() {
   const initialiseNewChat = useInitialiseNewChat();
@@ -22,7 +29,29 @@ function App() {
   const setTheme = useStore((state) => state.setTheme);
   const setApiKey = useStore((state) => state.setApiKey);
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
+  const addAdminChat = useAddAdminChat();
+  const chats = useStore.getState().chats;
+  const currentChatIndex = useStore.getState().currentChatIndex;
+  
+  useEffect(() => {
+    const func = async () => {
 
+      const {data} = await login("user@gmail.com", "realpass")
+      const {fetchedData, fetchError} = await fetchUserId("admin@gmail.com")
+      console.log(data)
+      const {threadsData, threadsError} = await fetchConversationsFromSupabase(data.user, fetchedData?.id);    
+      threadsData?.map((thread) => {
+        chats?.forEach((chat) => {
+          if(chat.id === thread.id)
+            return
+        })
+        addAdminChat(thread.id, thread.title)
+        
+      })
+    }
+    func();
+  }, []);
+  
   useEffect(() => {
     document.documentElement.lang = i18n.language;
     i18n.on('languageChanged', (lng) => {
@@ -46,36 +75,6 @@ function App() {
       // legacy local storage
       setTheme(theme as Theme);
       localStorage.removeItem('theme');
-    }
-
-    if (oldChats) {
-      // legacy local storage
-      try {
-        const chats: ChatInterface[] = JSON.parse(oldChats);
-        if (chats.length > 0) {
-          setChats(chats);
-          setCurrentChatIndex(0);
-        } else {
-          initialiseNewChat();
-        }
-      } catch (e: unknown) {
-        console.log(e);
-        initialiseNewChat();
-      }
-      localStorage.removeItem('chats');
-    } else {
-      // existing local storage
-      const chats = useStore.getState().chats;
-      const currentChatIndex = useStore.getState().currentChatIndex;
-      if (!chats || chats.length === 0) {
-        initialiseNewChat();
-      }
-      if (
-        chats &&
-        !(currentChatIndex >= 0 && currentChatIndex < chats.length)
-      ) {
-        setCurrentChatIndex(0);
-      }
     }
   }, []);
 

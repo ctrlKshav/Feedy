@@ -26,8 +26,6 @@ const AuthProvider = ({ children }: {children: ReactNode}) => {
       setUser(currentUser ?? null);
       setLoading(false);
 
-      const {fetchedData, fetchError} = await fetchUserId("admin@gmail.com")
-      setAdminId(fetchedData?.id)
     };
     getUser();
     // onAuthStateChange code below

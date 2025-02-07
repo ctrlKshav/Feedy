@@ -18,11 +18,8 @@ import useInitialiseNewAdminChat from '@hooks/admin/useInitialiseNewAdminChat';
 import useAddAdminChat from '@hooks/admin/useAddAdminChat';
 import { useAuth } from './context/AuthProvider';
 
-const loader = async () => {
-  const {authData, authError} = await authLoader("admin@gmail.com", "realadmin");
-  const {fetchedData, fetchError} = await fetchUserId("user@gmail.com");
-  return { authData, fetchedData };
-};
+const login = (email: string, password: string) =>
+  supabase.auth.signInWithPassword({ email, password });
 
 function Admin() {
   const initialiseNewChat = useInitialiseNewAdminChat();
@@ -31,23 +28,29 @@ function Admin() {
   const setTheme = useStore((state) => state.setTheme);
   const setApiKey = useStore((state) => state.setApiKey);
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
-  const {user, adminId} = useAuth();
+  const chats = useStore.getState().chats;
+  const currentChatIndex = useStore.getState().currentChatIndex;
+  
 
-  // const [authData, setAuthData] = useState({})
-  // const [fetchedData, setFetchedData] = useState<null | {}>({})
-
+  
   useEffect(() => {
     const func = async () => {
-      // setAuthData(authData)
-      // setFetchedData(fetchedData)
-      const {threadsData, threadsError} = await fetchConversationsFromSupabase(user, adminId);    
+
+      const {data} = await login("admin@gmail.com", "realadmin")
+      const {fetchedData, fetchError} = await fetchUserId("user@gmail.com")
+      console.log(data)
+      const {threadsData, threadsError} = await fetchConversationsFromSupabase(data.user, fetchedData?.id);    
       threadsData?.map((thread) => {
+        chats?.forEach((chat) => {
+          if(chat.id === thread.id)
+            return
+        })
         addAdminChat(thread.id, thread.title)
+        
       })
     }
     func();
   }, []);
-  
   useEffect(() => {
     document.documentElement.lang = i18n.language;
     i18n.on('languageChanged', (lng) => {

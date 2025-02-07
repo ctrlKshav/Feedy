@@ -14,7 +14,6 @@ const useAddAdminChat = () => {
         setChats(chats);
         setCurrentChatIndex(0);
       }
-      
   };
 
   return addAdminChat;
