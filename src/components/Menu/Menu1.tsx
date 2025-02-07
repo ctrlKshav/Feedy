@@ -41,7 +41,7 @@ const Menu = () => {
           <div className='flex h-full w-full flex-1 items-start border-white/20'>
             <nav className='flex h-full flex-1 flex-col space-y-1 px-2 pt-2'>
               <div className='flex gap-2'>
-                {/* <NewChat /> */}
+                <NewChat />
                 {/* <NewFolder /> */}
               </div>
               <ChatHistoryList />

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useStore from '@store/store';
 
@@ -11,12 +11,13 @@ import { Send, Paperclip } from 'lucide-react';
 import StopGeneratingButton from '@components/StopGeneratingButton/StopGeneratingButton';
 
 import { saveConversationToSupabase } from '@utils/supabaseOperations';
-import { authLoader, fetchAdminID } from '@utils/auth';
+import { authLoader, fetchUserId } from '@utils/auth';
+import { useAuth } from '@src/context/AuthProvider';
 
 const loader = async () => {
-  const authData = await authLoader();
-  const adminData = await fetchAdminID("admin@gmail.com");
-  return { authData, adminData };
+  const {authData, authError} = await authLoader("user@gmail.com", "realuser");
+  const {fetchedData, fetchError} = await fetchUserId("admin@gmail.com");
+  return { authData, fetchedData };
 };
 
 const EditView = ({
@@ -32,7 +33,8 @@ const EditView = ({
 }) => {
   const setGenerating = useStore((state) => state.setGenerating);
 
-  const loadData = loader();
+  const {user, adminId} = useAuth();
+
 
   const inputRole = useStore((state) => state.inputRole);
   const setChats = useStore((state) => state.setChats);
@@ -93,7 +95,7 @@ const EditView = ({
     );
     
     console.log("1")
-    const supabaseResponse = saveConversationToSupabase(_content, attachments , (await loadData),
+    const supabaseResponse = saveConversationToSupabase(user,adminId, _content, attachments ,
       inputRole, updatedChats, currentChatIndex
   )
     console.log(supabaseResponse)

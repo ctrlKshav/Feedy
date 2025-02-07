@@ -1,23 +1,19 @@
-﻿import { authLoader, fetchAdminID } from "@utils/auth";
+﻿import { User } from "@supabase/supabase-js";
 import supabase from "./supabase";
-
-import useStore from "@store/store";
 
 import { ChatInterface } from "@type/chat";
 
-export const saveConversationToSupabase = async (content : string, attachments : File[] , loadData: any
+export const saveConversationToSupabase = async (user:User,adminId: string, content : string, attachments : File[] 
     , inputRole: string, updatedChats: ChatInterface[], currentChatIndex: number
 ) => {
 
-    const { authData, adminData } = loadData;
-          
     const threadResponse = await supabase
       .from('threads')
       .upsert({
         id: updatedChats[currentChatIndex].id,
         title: updatedChats[currentChatIndex].title,
-        user_id: authData.userData.user?.id,
-        admin_id: adminData.adminData?.id
+        user_id: user?.id,
+        admin_id: adminId
       });
 
     const messageResponse = await supabase
@@ -29,5 +25,30 @@ export const saveConversationToSupabase = async (content : string, attachments :
       })
 
       return { threadResponse, messageResponse };
+
+}
+
+export const fetchConversationsFromSupabase = async (user:User, adminId: string ) => {
+  
+  const { data: threadsData, error: threadsError } = await supabase
+  .from('threads')
+  .select(`
+    id,
+    title,
+    user_id,
+    messages (
+      id,
+      content,
+      created_at,
+      user_id,
+      admin_id,
+      role,
+      thread_id
+    )
+  `)
+  .eq('admin_id', user?.id);
+
+  console.log(threadsData)
+  return {threadsData, threadsError}
 
 }

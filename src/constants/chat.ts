@@ -164,6 +164,22 @@ export const generateDefaultChat = (
   folder,
 });
 
+export const generateDefaultAdminChat = (
+  id: string,
+  title?: string,
+  folder?: string,
+): ChatInterface => ({
+  id: id,
+  title: title ? title : 'New Chat',
+  messages:
+    useStore.getState().defaultSystemMessage.length > 0
+      ? [{ role: 'system', content: useStore.getState().defaultSystemMessage }]
+      : [],
+  config: { ...useStore.getState().defaultChatConfig },
+  titleSet: false,
+  folder,
+});
+
 export const codeLanguageSubset = [
   'python',
   'javascript',

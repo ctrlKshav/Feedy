@@ -13,7 +13,6 @@ const Message = React.memo(({ role, content, messageIndex, sticky = false }: {
   sticky?: boolean;
 }) => {
   const hideSideMenu = useStore((state) => state.hideSideMenu);
-  console.log(role)
 
   return (
     <div className={`w-full text-gray-800 dark:text-gray-100 group 

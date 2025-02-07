@@ -13,6 +13,7 @@ import { ChatInterface } from '@type/chat';
 import { Theme } from '@type/theme';
 import ApiPopup from '@components/ApiPopup';
 import Toast from '@components/Toast';
+import AuthProvider from './context/AuthProvider';
 
 
 function App() {

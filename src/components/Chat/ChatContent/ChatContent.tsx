@@ -32,9 +32,6 @@ const ChatContent = () => {
   const saveRef = useRef<HTMLDivElement>(null);
 
   const hasUserMessages = messages.some(message => message.role === 'user');
-
-  // console.log("real")
-  // console.log( messages)
   
   
   useEffect(() => {

@@ -1,24 +1,24 @@
 ﻿import supabase from "./supabase";
 
-export const authLoader = async () => {
+export const authLoader = async ( email : string, password : string) => {
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: "user@gmail.com",
-        password: "realuser"
+        email: email,
+        password: password
       });
       if (authError) {
         console.error('Error fetching user:', authError);
       }
-    // console.log(authData)
-    return { userData: authData, authError };
+    console.log(authData)
+    return { authData, authError };
 };
 
-export const fetchAdminID = async ( adminEmail : string) => {
-  const { data: adminData, error: adminError } = await supabase
+export const fetchUserId = async ( email : string) => {
+  const { data: fetchedData, error: fetchError } = await supabase
     .from('profiles')
     .select('id')
-    .eq('email', adminEmail)
+    .eq('email', email)
     .single();
 
-  return { adminData, adminError };
+  return { fetchedData, fetchError };
 }
 
