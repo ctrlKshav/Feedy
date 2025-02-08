@@ -7,17 +7,17 @@ await import('katex/dist/katex.min.css');
 
 import './i18n';
 import { BrowserRouter, Routes, Route } from 'react-router';
+import UserAuthProvider from './context/UserAuthProvider';
+import AdminAuthProvider from './context/AdminAuthProvider';
 // import AuthProvider from './context/AuthProvider';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <>
     <BrowserRouter>
-      {/* <AuthProvider> */}
         <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/" element={<UserAuthProvider />} />
+          <Route path="/admin" element={<AdminAuthProvider />} />
         </Routes>
-      {/* </AuthProvider> */}
     </BrowserRouter>
   </>
 );

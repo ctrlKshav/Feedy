@@ -8,7 +8,6 @@ export const authLoader = async ( email : string, password : string) => {
       if (authError) {
         console.error('Error fetching user:', authError);
       }
-    console.log(authData)
     return { authData, authError };
 };
 

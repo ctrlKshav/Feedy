@@ -94,12 +94,9 @@ const EditView = ({
       JSON.stringify(useStore.getState().chats)
     );
     
-    console.log("1")
     const supabaseResponse = saveConversationToSupabase(user,adminId, _content, attachments ,
       inputRole, updatedChats, currentChatIndex
   )
-    console.log(supabaseResponse)
-    console.log("2")
     
     
     const updatedMessages = updatedChats[currentChatIndex].messages;

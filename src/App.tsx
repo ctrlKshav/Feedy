@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { BrowserRouter } from "react-router";
 
 import useStore from '@store/store';
@@ -24,7 +24,7 @@ import { useAuth } from './context/UserAuthProvider';
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
 
-function App() {
+function  AppChild() {
   const initialiseNewChat = useInitialiseNewChat();
   const setChats = useStore((state) => state.setChats);
   const setTheme = useStore((state) => state.setTheme);
@@ -38,45 +38,51 @@ function App() {
   
   useEffect(() => {
     const func = async () => {
-
-      const {threadsData, threadsError} = await fetchConversationsFromSupabase(user, adminId);    
-      threadsData?.map((thread) => {
-        chats?.forEach((chat) => {
-          if(chat.id === thread.id)
-            return
-        })
-        addAdminChat(thread.id, thread.title)
-        
-      })
-    }
-    func();
-  }, []);
+      const { threadsData, threadsError } = await fetchConversationsFromSupabase(user, adminId);
   
-  useEffect(() => {
-    document.documentElement.lang = i18n.language;
-    i18n.on('languageChanged', (lng) => {
-      document.documentElement.lang = lng;
-    });
-  }, []);
+      threadsData?.forEach(async (thread) => {
+        // If `some` returns true, it means a match is found, and `addAdminChat` won't be called.
+        const exists = chats?.some((chat) => {
+          return chat.id === thread.id; // Exits early if condition is met
+        });
+        if (exists == undefined || !exists) {
+          console.log("haiya")
+          await addAdminChat(thread);
+          console.log("baiya")
 
-  useEffect(() => {
-    // legacy local storage
-    const oldChats = localStorage.getItem('chats');
-    const apiKey = localStorage.getItem('apiKey');
-    const theme = localStorage.getItem('theme');
+        }
+      });
+    };
+  
+    if (user) func();
+  },[]);
+  
 
-    if (apiKey) {
-      // legacy local storage
-      setApiKey(apiKey);
-      localStorage.removeItem('apiKey');
-    }
+  // useEffect(() => {
+  //   document.documentElement.lang = i18n.language;
+  //   i18n.on('languageChanged', (lng) => {
+  //     document.documentElement.lang = lng;
+  //   });
+  // }, []);
 
-    if (theme) {
-      // legacy local storage
-      setTheme(theme as Theme);
-      localStorage.removeItem('theme');
-    }
-  }, []);
+  // useEffect(() => {
+  //   // legacy local storage
+  //   const oldChats = localStorage.getItem('chats');
+  //   const apiKey = localStorage.getItem('apiKey');
+  //   const theme = localStorage.getItem('theme');
+
+  //   if (apiKey) {
+  //     // legacy local storage
+  //     setApiKey(apiKey);
+  //     localStorage.removeItem('apiKey');
+  //   }
+
+  //   if (theme) {
+  //     // legacy local storage
+  //     setTheme(theme as Theme);
+  //     localStorage.removeItem('theme');
+  //   }
+  // }, []);
 
   return (
     <div className='overflow-hidden w-full h-full relative'>
@@ -85,6 +91,14 @@ function App() {
       {/* <ApiPopup /> */}
       <Toast />
     </div>
+  );
+}
+
+function App() {
+  return (
+      <Suspense fallback={<div>realshiz</div>}>
+        <AppChild />
+      </Suspense>
   );
 }
 

@@ -16,7 +16,7 @@ import { authLoader, fetchUserId } from '@utils/auth';
 import { fetchConversationsFromSupabase } from '@utils/supabaseOperations';
 import useInitialiseNewAdminChat from '@hooks/admin/useInitialiseNewAdminChat';
 import useAddAdminChat from '@hooks/admin/useAddAdminChat';
-import { useAuth } from './context/UserAuthProvider';
+import { useAuth } from './context/AdminAuthProvider';
 
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
@@ -33,22 +33,32 @@ function Admin() {
   const {user, adminId} = useAuth();
   
 
-  
   useEffect(() => {
     const func = async () => {
+      const { threadsData, threadsError } = await fetchConversationsFromSupabase(user, adminId);
+  
+      threadsData?.forEach((thread, index) => {
+        // If `some` returns true, it means a match is found, and `addAdminChat` won't be called.
+        const exists = chats?.some((chat) => {
+          return chat.id === thread.id; // Exits early if condition is met
+        });
+  
+        if (exists == undefined || !exists) {
+          addAdminChat(thread.id, thread.title);
+          thread.messages.forEach((message) => {
+            chats && chats[index].messages.push({
+              role: message.role,
+              content: message.content,
+            });
+          })
+         
+        }
+      });
+    };
+  
+    if (user) func();
+  }, [user]);
 
-      const {threadsData, threadsError} = await fetchConversationsFromSupabase(user, adminId);    
-      threadsData?.map((thread) => {
-        chats?.forEach((chat) => {
-          if(chat.id === thread.id)
-            return
-        })
-        addAdminChat(thread.id, thread.title)
-        
-      })
-    }
-    func();
-  }, []);
   useEffect(() => {
     document.documentElement.lang = i18n.language;
     i18n.on('languageChanged', (lng) => {

@@ -2,17 +2,18 @@
 import supabase from "@utils/supabase"
 import { User } from "@supabase/supabase-js";
 import { fetchUserId } from "@utils/auth";
+import Admin from "@src/Admin";
 
-const AuthContext = createContext({});
+const AdminAuthContext = createContext({});
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AdminAuthContext);
 
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
 
 const signOut = () => supabase.auth.signOut();
 
-const AdminAuthProvider = ({ children }: {children: ReactNode}) => {
+const AdminAuthProvider = () => {
   const [user, setUser] = useState<null | User>(null);
   const [adminId, setAdminId] = useState<null | string>(null);
   const [auth, setAuth] = useState(false);
@@ -25,6 +26,7 @@ const AdminAuthProvider = ({ children }: {children: ReactNode}) => {
     const {data} = await login("admin@gmail.com", "realadmin")
     const {fetchedData, fetchError} = await fetchUserId("user@gmail.com")
 
+
     const { user: currentUser } = data;
     setUser(currentUser ?? null);
     setAdminId(fetchedData?.id)
@@ -36,7 +38,7 @@ const AdminAuthProvider = ({ children }: {children: ReactNode}) => {
   }, []);
   
   return (
-    <AuthContext.Provider
+    <AdminAuthContext.Provider
       value={{
         auth,
         user,
@@ -44,8 +46,8 @@ const AdminAuthProvider = ({ children }: {children: ReactNode}) => {
         login,
         signOut,
       }}>
-      {!loading && children}
-    </AuthContext.Provider>
+      {!loading && <Admin />}
+    </AdminAuthContext.Provider>
   );
 };
 

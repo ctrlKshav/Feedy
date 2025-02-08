@@ -2,17 +2,18 @@
 import supabase from "@utils/supabase"
 import { User } from "@supabase/supabase-js";
 import { fetchUserId } from "@utils/auth";
+import App from "@src/App";
 
-const AuthContext = createContext({});
+const UserAuthContext = createContext({});
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(UserAuthContext);
 
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
 
 const signOut = () => supabase.auth.signOut();
 
-const UserAuthProvider = ({ children }: {children: ReactNode}) => {
+const UserAuthProvider = () => {
   const [user, setUser] = useState<null | User>(null);
   const [adminId, setAdminId] = useState<null | string>(null);
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ const UserAuthProvider = ({ children }: {children: ReactNode}) => {
     setLoading(true);
     const getUser = async () => {
         
-    const {data} = await login("user@gmail.com", "realpass")
+    const {data} = await login("user@gmail.com", "realuser")
     const {fetchedData, fetchError} = await fetchUserId("admin@gmail.com")
 
     const { user: currentUser } = data;
@@ -35,13 +36,13 @@ const UserAuthProvider = ({ children }: {children: ReactNode}) => {
   }, []);
   
   return (
-    <AuthContext.Provider
+    <UserAuthContext.Provider
       value={{
         user,
         adminId,
       }}>
-      {!loading && children}
-    </AuthContext.Provider>
+      {!loading && <App />}
+    </UserAuthContext.Provider>
   );
 };
 

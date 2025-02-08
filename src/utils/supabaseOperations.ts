@@ -35,9 +35,11 @@ export const fetchConversationsFromSupabase = async (user:(User | null), adminId
     .select(`
       id,
       title,
+      admin_id,
       user_id,
       messages (
         id,
+        role,
         content,
         created_at,
         user_id,
@@ -56,9 +58,11 @@ export const fetchConversationsFromSupabase = async (user:(User | null), adminId
     .select(`
       id,
       title,
+      admin_id,
       user_id,
       messages (
         id,
+        role,
         content,
         created_at,
         user_id,
