@@ -15,8 +15,11 @@ import { authLoader, fetchUserId } from '@utils/auth';
 import { useAuth } from '@src/context/UserAuthProvider';
 
 const loader = async () => {
-  const {authData, authError} = await authLoader("user@gmail.com", "realuser");
-  const {fetchedData, fetchError} = await fetchUserId("admin@gmail.com");
+  const { authData, authError } = await authLoader(
+    'user@gmail.com',
+    'realuser'
+  );
+  const { fetchedData, fetchError } = await fetchUserId('admin@gmail.com');
   return { authData, fetchedData };
 };
 
@@ -33,8 +36,6 @@ const EditView = ({
 }) => {
   const setGenerating = useStore((state) => state.setGenerating);
 
-
-
   const inputRole = useStore((state) => state.inputRole);
   const setChats = useStore((state) => state.setChats);
   const currentChatIndex = useStore((state) => state.currentChatIndex);
@@ -47,7 +48,7 @@ const EditView = ({
   const generating = useStore((state) => state.generating);
 
   const { t } = useTranslation();
-  const {user, adminId} = useAuth();
+  const { user, adminId } = useAuth();
 
   const resetTextAreaHeight = () => {
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
@@ -83,35 +84,39 @@ const EditView = ({
   const handleAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      setAttachments(prev => [...prev, ...files]);
+      setAttachments((prev) => [...prev, ...files]);
     }
   };
 
   const handleGenerate = async () => {
-
     if (useStore.getState().generating) return;
     const updatedChats: ChatInterface[] = JSON.parse(
       JSON.stringify(useStore.getState().chats)
     );
-    
-    const supabaseResponse = saveConversationToSupabase(user,adminId, _content, attachments ,
-      inputRole, updatedChats, currentChatIndex
-  )
-    
-    
+
+    const supabaseResponse = saveConversationToSupabase(
+      user,
+      adminId,
+      _content,
+      attachments,
+      inputRole,
+      updatedChats,
+      currentChatIndex
+    );
+
     const updatedMessages = updatedChats[currentChatIndex].messages;
-    
+
     if (sticky) {
       if (_content !== '' || attachments.length > 0) {
         updatedMessages.push({
           role: inputRole,
           content: _content,
-          attachments: attachments.map(file => ({
+          attachments: attachments.map((file) => ({
             name: file.name,
             type: file.type,
             size: file.size,
-            url: URL.createObjectURL(file)
-          }))
+            url: URL.createObjectURL(file),
+          })),
         });
       }
       _setContent('');
@@ -119,11 +124,11 @@ const EditView = ({
       resetTextAreaHeight();
     } else {
       updatedMessages[messageIndex].content = _content;
-      updatedMessages[messageIndex].attachments = attachments.map(file => ({
+      updatedMessages[messageIndex].attachments = attachments.map((file) => ({
         name: file.name,
         type: file.type,
         size: file.size,
-        url: URL.createObjectURL(file)
+        url: URL.createObjectURL(file),
       }));
       updatedChats[currentChatIndex].messages = updatedMessages.slice(
         0,
@@ -159,22 +164,22 @@ const EditView = ({
         }`}
       >
         <div className='flex items-center gap-2'>
-          <div className="flex gap-2">
-            <label className="flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
-              <Paperclip className="w-5 h-5 text-white/80" />
+          <div className='flex gap-2'>
+            <label className='flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer'>
+              <Paperclip className='w-5 h-5 text-white/80' />
               <input
-                type="file"
+                type='file'
                 multiple
                 onChange={handleAttachment}
-                className="hidden"
-                accept="image/*,.pdf,.doc,.docx,.txt"
+                className='hidden'
+                accept='image/*,.pdf,.doc,.docx,.txt'
               />
             </label>
           </div>
-          <div className="relative flex-1">
+          <div className='relative flex-1 overflow-hidden'>
             <textarea
               ref={textareaRef}
-              className='m-0 resize-none rounded-lg bg-transparent overflow-y-hidden focus:ring-0 focus-visible:ring-0 leading-7 w-full placeholder:text-gray-500/40'
+              className='m-0 resize-none rounded-lg bg-transparent overflow-y-auto focus:ring-0 focus-visible:ring-0 leading-7 w-full placeholder:text-gray-500/40 max-h-20'
               onChange={(e) => {
                 _setContent(e.target.value);
               }}
@@ -182,15 +187,24 @@ const EditView = ({
               placeholder={t('submitPlaceholder') as string}
               onKeyDown={handleKeyDown}
               rows={1}
+              style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}
             ></textarea>
+
             {attachments.length > 0 && (
-              <div className="mt-2 flex gap-2 flex-wrap">
+              <div className='mt-2 flex gap-2 flex-wrap'>
                 {attachments.map((file, index) => (
-                  <div key={index} className="text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+                  <div
+                    key={index}
+                    className='text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded'
+                  >
                     {file.name}
-                    <button 
-                      onClick={() => setAttachments(prev => prev.filter((_, i) => i !== index))}
-                      className="ml-2 text-red-500 hover:text-red-700"
+                    <button
+                      onClick={() =>
+                        setAttachments((prev) =>
+                          prev.filter((_, i) => i !== index)
+                        )
+                      }
+                      className='ml-2 text-red-500 hover:text-red-700'
                     >
                       ×
                     </button>
@@ -203,18 +217,16 @@ const EditView = ({
             <StopGeneratingButton />
           ) : (
             <button
-            onClick={handleGenerate}
-            className='flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50'
-            disabled={useStore.getState().generating || _content === ''}
-          >
-            <Send className='w-5 h-5' />
-          </button>
+              onClick={handleGenerate}
+              className='flex items-center justify-center p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50'
+              disabled={useStore.getState().generating || _content === ''}
+            >
+              <Send className='w-5 h-5' />
+            </button>
           )}
-
-          
         </div>
       </div>
-      
+
       {isModalOpen && (
         <PopupModal
           setIsModalOpen={setIsModalOpen}
