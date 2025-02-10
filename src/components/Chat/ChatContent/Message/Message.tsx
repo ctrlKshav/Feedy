@@ -5,7 +5,6 @@ import Avatar from './Avatar';
 import MessageContent from './MessageContent';
 
 import { Role } from '@type/chat';
-import MessageContentAdmin from './MessageContent';
 
 const Message = React.memo(({ role, content, messageIndex, sticky = false }: {
   role: Role;
@@ -24,7 +23,7 @@ const Message = React.memo(({ role, content, messageIndex, sticky = false }: {
         <Avatar role={role} />
         <div className='w-[calc(100%-50px)] '>
           <span className={`${role}`}>{role.charAt(0).toUpperCase() + role.slice(1)}</span>
-          <MessageContentAdmin role={role} content={content} messageIndex={messageIndex} sticky={sticky} />
+          <MessageContent role={role} content={content} messageIndex={messageIndex} sticky={sticky} />
         </div>
       </div>
     </div>
