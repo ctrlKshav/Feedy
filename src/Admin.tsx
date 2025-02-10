@@ -5,7 +5,7 @@ import useStore from '@store/store';
 import i18n from './i18n';
 
 import Chat from '@components/Chat';
-import Menu1 from '@components/Menu/Menu1';
+import Menu1 from '@components/Menu/MenuAdmin';
 
 import { ChatInterface } from '@type/chat';
 import { Theme } from '@type/theme';
@@ -20,6 +20,8 @@ import { useAuth } from './context/AdminAuthProvider';
 import { Suspense } from 'react';
 import { Loader2 } from 'lucide-react';
 import ChatAdmin from '@components/Chat/ChatAdmin';
+import Skeleton from '@components/Skeleton';
+import MenuAdmin from '@components/Menu/MenuAdmin';
 
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
@@ -34,10 +36,12 @@ function AdminChild() {
   const chats = useStore.getState().chats;
   const currentChatIndex = useStore.getState().currentChatIndex;
   const {user, adminId} = useAuth();
+  const [loading, setLoading] = useState<boolean>(false);
   
 
   useEffect(() => {
     const func = async () => {
+      setLoading(true)
       const { threadsData, threadsError } = await fetchConversationsFromSupabase(user, adminId);
   
       threadsData?.forEach((thread, index) => {
@@ -57,6 +61,7 @@ function AdminChild() {
          
         }
       });
+      setLoading(false)
     };
   
     if (user) func();
@@ -93,7 +98,7 @@ function AdminChild() {
 
   return (
     <div className='overflow-hidden w-full h-full relative'>
-      <Menu1 />
+      <MenuAdmin loading={loading} />
       <ChatAdmin />
       {/* <ApiPopup /> */}
       <Toast />
@@ -104,9 +109,7 @@ function AdminChild() {
 function Admin() {
   return (
       <Suspense fallback={
-        <div className='bg-gray-800 min-h-screen flex justify-center items-center'>
-          <Loader2  className='text-white '/>
-        </div>
+        <Skeleton />
       }>
         <AdminChild />
       </Suspense>

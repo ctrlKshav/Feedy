@@ -45,15 +45,11 @@ const Menu = (props: {loading: boolean}) => {
                 <NewChat />
                 <NewFolder />
               </div>
-              { props.loading ? 
-              <div className='flex justify-center'>
-                <Loader2 className='text-white  h-5 w-5' />
-              </div> : (
+             
                 <>
                   <ChatHistoryList loading={props.loading}/>
                   <MenuOptions />
                 </>
-              )}
               
             </nav>
           </div>

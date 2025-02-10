@@ -11,7 +11,7 @@ import CrossIcon2 from '@icon/CrossIcon2';
 import DownArrow from '@icon/DownArrow';
 import MenuIcon from '@icon/MenuIcon';
 
-const Menu = () => {
+const MenuAdmin = (props: {loading: boolean}) => {
   const hideSideMenu = useStore((state) => state.hideSideMenu);
   const setHideSideMenu = useStore((state) => state.setHideSideMenu);
 
@@ -44,8 +44,10 @@ const Menu = () => {
                 <NewChat />
                 {/* <NewFolder /> */}
               </div>
-              <ChatHistoryList />
-              <MenuOptions />
+              <>
+                <ChatHistoryList  loading={props.loading} />
+                <MenuOptions />
+              </>
             </nav>
           </div>
         </div>
@@ -65,4 +67,4 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export default MenuAdmin;

@@ -4,6 +4,7 @@ import { User } from "@supabase/supabase-js";
 import { fetchUserFromProfiles, fetchUserId } from "@utils/auth";
 import Admin from "@src/Admin";
 import { Loader2 } from "lucide-react";
+import Skeleton from "@components/Skeleton";
 
 const AdminAuthContext = createContext({});
 
@@ -45,9 +46,8 @@ const AdminAuthProvider = () => {
       adminId,
     }}>
       {loading && 
-      <div className='bg-gray-800 min-h-screen flex justify-center items-center'>
-        <Loader2  className='text-white '/>
-      </div>}
+        <Skeleton />
+      }
 
       {!loading && <Admin />}
   </AdminAuthContext.Provider>

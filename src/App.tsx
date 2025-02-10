@@ -6,7 +6,7 @@ import i18n from './i18n';
 
 import Chat from '@components/Chat';
 import Menu from '@components/Menu';
-import Menu1 from '@components/Menu/Menu1';
+import Menu1 from '@components/Menu/MenuAdmin';
 
 import useInitialiseNewChat from '@hooks/useInitialiseNewChat';
 import { ChatInterface } from '@type/chat';
@@ -21,6 +21,7 @@ import supabase from '@utils/supabase';
 import { fetchUserId } from '@utils/auth';
 import { useAuth } from './context/UserAuthProvider';
 import { Loader2 } from 'lucide-react';
+import Skeleton from '@components/Skeleton';
 
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
@@ -99,9 +100,7 @@ function  AppChild() {
 function App() {
   return (
       <Suspense fallback={
-        <div className='bg-gray-800 min-h-screen flex justify-center items-center'>
-          <Loader2  className='text-white '/>
-        </div>
+        <Skeleton />
       }>
         <AppChild />
       </Suspense>

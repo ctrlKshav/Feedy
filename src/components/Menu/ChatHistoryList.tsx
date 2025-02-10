@@ -13,7 +13,9 @@ import {
   FolderCollection,
 } from '@type/chat';
 
-const ChatHistoryList = (props: {loading: boolean}) => {
+import { Loader2 } from 'lucide-react';
+
+const ChatHistoryList = (props: { loading: boolean }) => {
   const currentChatIndex = useStore((state) => state.currentChatIndex);
   const setChats = useStore((state) => state.setChats);
   const setFolders = useStore((state) => state.setFolders);
@@ -39,7 +41,7 @@ const ChatHistoryList = (props: {loading: boolean}) => {
     const _folders: ChatHistoryFolderInterface = {};
     const _noFolders: ChatHistoryInterface[] = [];
     const chats = useStore.getState().chats;
-    console.log(chats)
+    console.log(chats);
     const folders = useStore.getState().folders;
 
     Object.values(folders)
@@ -125,7 +127,7 @@ const ChatHistoryList = (props: {loading: boolean}) => {
   useEffect(() => {
     filterRef.current = filter;
     updateFolders();
-    console.log(noChatFolders)
+    console.log(noChatFolders);
   }, [filter]);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -166,18 +168,30 @@ const ChatHistoryList = (props: {loading: boolean}) => {
       onDragEnd={handleDragEnd}
     >
       <ChatSearch filter={filter} setFilter={setFilter} />
-      <div className='flex flex-col gap-2 text-gray-100 text-sm'>
-        {Object.keys(chatFolders).map((folderId) => (
-          <ChatFolder
-            folderChats={chatFolders[folderId]}
-            folderId={folderId}
-            key={folderId}
-          />
-        ))}
-        {noChatFolders.map(({ title, index, id }) => (
-          <ChatHistory title={title} key={`${title}-${id}`} chatIndex={index} />
-        ))}
-      </div>
+
+      {props.loading ? (
+        <div className='flex justify-center'>
+          <Loader2 className='text-white  h-5 w-5' />
+        </div>
+      ) : (
+        <div className='flex flex-col gap-2 text-gray-100 text-sm'>
+          {Object.keys(chatFolders).map((folderId) => (
+            <ChatFolder
+              folderChats={chatFolders[folderId]}
+              folderId={folderId}
+              key={folderId}
+            />
+          ))}
+          {noChatFolders.map(({ title, index, id }) => (
+            <ChatHistory
+              title={title}
+              key={`${title}-${id}`}
+              chatIndex={index}
+            />
+          ))}
+        </div>
+      )}
+
       <div className='w-full h-10' />
     </div>
   );
