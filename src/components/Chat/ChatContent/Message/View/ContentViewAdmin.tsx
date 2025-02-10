@@ -127,7 +127,7 @@
             <span className='whitespace-pre-wrap'>{content}</span>
           )}
             {attachments && attachments.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-2 justify-end">
+            <div className={`mt-2 flex flex-wrap gap-2`}>
               {attachments.map((attachment: Attachment, index: number) => (
                 <a
                   key={index}

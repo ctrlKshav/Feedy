@@ -2,10 +2,9 @@
 import useStore from '@store/store';
 
 import Avatar from './Avatar';
-import MessageContent from './MessageContent';
 
 import { Role } from '@type/chat';
-import MessageContentAdmin from './MessageContent';
+import MessageContentAdmin from './MessageContentAdmin';
 
 const MessageAdmin = React.memo(({ role, content, messageIndex, sticky = false }: {
   role: Role;
