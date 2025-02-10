@@ -36,11 +36,16 @@ const EditView = ({
 }) => {
   const setGenerating = useStore((state) => state.setGenerating);
 
+
   const inputRole = useStore((state) => state.inputRole);
   const setChats = useStore((state) => state.setChats);
   const currentChatIndex = useStore((state) => state.currentChatIndex);
 
   const [_content, _setContent] = useState<string>(content);
+  console.log("real1")
+  console.log(content, _content)
+  console.log("real2")
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const textareaRef = React.createRef<HTMLTextAreaElement>();
   const [attachments, setAttachments] = useState<File[]>([]);
@@ -153,6 +158,10 @@ const EditView = ({
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, []);
+
+  useEffect(() => {
+    _setContent(content)
+  }, [content])
 
   return (
     <>

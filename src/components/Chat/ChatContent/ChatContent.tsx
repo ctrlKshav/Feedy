@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import useStore from '@store/store';
 import ScrollToBottomButton from './ScrollToBottomButton';
@@ -31,15 +31,18 @@ const ChatContent = () => {
   const hideSideMenu = useStore((state) => state.hideSideMenu);
   const saveRef = useRef<HTMLDivElement>(null);
 
-  const hasUserMessages = messages.some(message => message.role === 'user');
-  const hasAdminMessages = messages.some(message => message.role === 'admin');
-  
-  
+  const hasUserMessages = messages.some((message) => message.role === 'user');
+  const hasAdminMessages = messages.some((message) => message.role === 'admin');
+
+  // NEW: Add state for input message
+  const [inputMessage, setInputMessage] = useState('');
+
   useEffect(() => {
+    console.log(inputMessage)
     if (generating) {
       setError('');
     }
-  }, [generating]);
+  }, [generating, inputMessage]);
 
   const { error } = useSubmit();
 
@@ -60,14 +63,14 @@ const ChatContent = () => {
             </div>
             {!hasUserMessages && !hasAdminMessages && (
               <div className="w-full">
-                <ExamplePromptsComponent />
+                <ExamplePromptsComponent setInputMessage={setInputMessage} />
               </div>
             )}
           </div>
         </ScrollToBottom>
       </div>
       <div className='w-full dark:bg-gray-800'>
-        <InputMessage role={inputRole} content='' messageIndex={stickyIndex} />
+        <InputMessage role={inputRole} content={inputMessage} messageIndex={stickyIndex} />
       </div>
     </div>
   );
