@@ -29,7 +29,8 @@ export const saveConversationToSupabase = async (user:User,adminId: string, cont
 }
 
 export const fetchConversationsFromSupabase = async (user:(User | null), adminId: string ) => {
-  if(user?.role === "admin"){
+  console.log(user)
+  if(user?.email?.includes("admin")){
     const { data : threadsData, error: threadsError } = await supabase
     .from('threads')
     .select(`
@@ -49,6 +50,7 @@ export const fetchConversationsFromSupabase = async (user:(User | null), adminId
       )
     `)
     .eq('admin_id', user?.id);
+    console.log(threadsData)
     return {threadsData, threadsError}
 
   }
