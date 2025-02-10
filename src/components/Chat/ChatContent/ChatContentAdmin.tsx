@@ -34,6 +34,7 @@ const ChatContentAdmin = () => {
   const saveRef = useRef<HTMLDivElement>(null);
 
   const hasUserMessages = messages.some(message => message.role === 'user');
+  const hasAdminMessages = messages.some(message => message.role === 'admin');
   
   
   useEffect(() => {
@@ -59,7 +60,7 @@ const ChatContentAdmin = () => {
                 )
               ))}
             </div>
-            {!hasUserMessages && (
+            {!hasUserMessages && !hasAdminMessages && (
               <div className="w-full">
                 <ExamplePromptsComponent />
               </div>
