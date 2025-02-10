@@ -1,56 +1,61 @@
-﻿import { createContext, ReactNode, Suspense, useContext, useEffect, useState } from "react";
-import supabase from "@utils/supabase"
+﻿import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import supabase from "@utils/supabase";
 import { User } from "@supabase/supabase-js";
 import { fetchUserFromProfiles, fetchUserId } from "@utils/auth";
 import App from "@src/App";
-import { Loader2 } from "lucide-react";
 import Skeleton from "@components/Skeleton";
 
-const UserAuthContext = createContext({});
+// Define the type for the context
+interface UserAuthContextType {
+  user: User | null;
+  adminId: string | null;
+}
 
-export const useAuth = () => useContext(UserAuthContext);
+// Create context with an undefined default to ensure it's not used outside the provider
+const UserAuthContext = createContext<UserAuthContextType | undefined>(undefined);
 
+// Custom hook to use the context safely
+export const useAuth = () => {
+  const context = useContext(UserAuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within a UserAuthProvider");
+  }
+  return context;
+};
+
+// Login & signout functions
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
 
 const signOut = () => supabase.auth.signOut();
 
 const UserAuthProvider = () => {
-  const [user, setUser] = useState<null | User>(null);
-  const [adminId, setAdminId] = useState<null | string>(null);
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [adminId, setAdminId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
     const getUser = async () => {
-        
-    const {data} = await login("user@gmail.com", "realuser")
-    const {fetchedProfile : currentUser, fetchProfileError } = await fetchUserFromProfiles("user@gmail.com")
-    const {fetchedData, fetchError} = await fetchUserId("admin@gmail.com")
+      setLoading(true);
+      const { data } = await login("user@gmail.com", "realuser");
+      const { fetchedProfile: currentUser } = await fetchUserFromProfiles("user@gmail.com");
+      const { fetchedData } = await fetchUserId("admin@gmail.com");
 
-    setUser(currentUser ?? null);
-    setAdminId(fetchedData?.id)
-    
-    setLoading(false);
+      setUser(currentUser ?? null);
+      setAdminId(fetchedData?.id ?? null);
+      setLoading(false);
     };
     getUser();
-    // onAuthStateChange code below
   }, []);
-  
+
   return (
-    
-      <UserAuthContext.Provider
-        value={{
-          user,
-          adminId,
-        }}>
-          {loading && 
-            <Skeleton />
-          }
-
-          {!loading && <App />}
-      </UserAuthContext.Provider>
-
+    <UserAuthContext.Provider
+      value={{
+        user,
+        adminId,
+      }}>
+      {loading ? <Skeleton /> : <App />}
+    </UserAuthContext.Provider>
   );
 };
 

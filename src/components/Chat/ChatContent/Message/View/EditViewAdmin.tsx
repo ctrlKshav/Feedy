@@ -2,9 +2,7 @@
 import { useTranslation } from 'react-i18next';
 import useStore from '@store/store';
 
-import useSubmit from '@hooks/useSubmit';
-
-import { Attachment, ChatInterface } from '@type/chat';
+import { Attachment, ChatInterface, Role } from '@type/chat';
 
 import PopupModal from '@components/PopupModal';
 import { Send, Paperclip } from 'lucide-react';
@@ -79,7 +77,6 @@ const EditViewAdmin = ({
     }
   };
 
-  const { handleSubmit } = useSubmit();
   const handleAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
@@ -93,7 +90,7 @@ const EditViewAdmin = ({
     const updatedChats: ChatInterface[] = JSON.parse(
       JSON.stringify(useStore.getState().chats)
     );
-    if(user.role === "admin")
+    if(user?.role === "admin")
       setInputRole('admin')
       
     const supabaseResponse = saveConversationToSupabase(user,adminId, _content, attachments ,
@@ -106,7 +103,7 @@ const EditViewAdmin = ({
     if (sticky) {
       if (_content !== '' || attachments.length > 0) {
         updatedMessages.push({
-          role: user.role,
+          role: user?.role as Role || inputRole,
           content: _content,
           attachments: attachments.map(file => ({
             name: file.name,
@@ -134,7 +131,6 @@ const EditViewAdmin = ({
       setIsEdit(false);
     }
     setChats(updatedChats);
-    // handleSubmit(attachments[0], _content);
   };
 
   useEffect(() => {

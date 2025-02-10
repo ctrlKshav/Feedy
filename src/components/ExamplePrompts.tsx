@@ -2,7 +2,7 @@
 import useStore from "@store/store"
 import { useTranslation } from "react-i18next"
 import { motion } from "framer-motion"
-import useSubmit from "@hooks/useSubmit"
+// import useSubmit from "@hooks/useSubmit"
 import { Sparkles } from "lucide-react"
 
 interface Prompt {
@@ -36,7 +36,7 @@ export const ExamplePromptsComponent: React.FC = () => {
   const { t } = useTranslation()
   const setChats = useStore((state) => state.setChats)
   const currentChatIndex = useStore((state) => state.currentChatIndex)
-  const { handleSubmit } = useSubmit()
+  // const { handleSubmit } = useSubmit()
 
   const handlePromptClick = async (prompt: string) => {
     if (useStore.getState().generating) return
@@ -61,7 +61,7 @@ export const ExamplePromptsComponent: React.FC = () => {
     }
 
     setChats(updatedChats)
-    handleSubmit(new File([], "prompt"), prompt)
+    // handleSubmit(new File([], "prompt"), prompt)
   }
 
   const containerVariants = {

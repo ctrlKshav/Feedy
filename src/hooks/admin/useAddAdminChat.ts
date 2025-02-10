@@ -3,6 +3,7 @@ import useStore from '@store/store';
 import { generateDefaultAdminChat } from '@constants/chat';
 import { ChatInterface } from '@type/chat';
 import useInitialiseNewAdminChat from './useInitialiseNewAdminChat';
+import { SupabaseThread } from '@type/supabase';
 
 const useAddAdminChat = () => {
   const setChats = useStore((state) => state.setChats);
@@ -10,7 +11,7 @@ const useAddAdminChat = () => {
   const setCurrentChatIndex = useStore((state) => state.setCurrentChatIndex);
   const initialiseNewAdminChat = useInitialiseNewAdminChat();
 
-  const addAdminChat =  async (thread: any, folder?:string,) => {
+  const addAdminChat =  async (thread: SupabaseThread, folder?:string,) => {
     const chats = useStore.getState().chats;
     const realChat = chats
     

@@ -4,7 +4,6 @@ import useStore from '@store/store';
 import ScrollToBottomButton from './ScrollToBottomButton';
 import Message from './Message';
 import InputMessage from './Message/InputMessage';
-import useSubmit from '@hooks/useSubmit';
 import { ExamplePromptsComponent } from '@components/ExamplePrompts';
 import InputMessageAdmin from './Message/InputMessageAdmin';
 import MessageAdmin from './Message/MessageAdmin';
@@ -43,7 +42,6 @@ const ChatContentAdmin = () => {
     }
   }, [generating]);
 
-  const { error } = useSubmit();
 
   return (
     <div className='flex-1 flex flex-col h-full relative'>
