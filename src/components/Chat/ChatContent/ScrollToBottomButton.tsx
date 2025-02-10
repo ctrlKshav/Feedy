@@ -9,13 +9,13 @@ const ScrollToBottomButton = React.memo(() => {
 
   return (
     <button
-      className={`cursor-pointer absolute right-6 bottom-[60px] md:bottom-[60px] z-10 rounded-full border border-gray-200 bg-gray-50 text-gray-600 dark:border-white/10 dark:bg-white/10 dark:text-gray-200 ${
-        atBottom ? 'hidden' : ''
+      className={`cursor-pointer absolute right-6 bottom-0 md:right-8 md:bottom-0 z-10 rounded-full border border-gray-200 bg-gray-50 p-2 text-gray-600 shadow-md dark:border-white/10 dark:bg-white/10 dark:text-gray-200 transition-opacity duration-200 ${
+        atBottom ? 'opacity-0 pointer-events-none' : 'opacity-80'
       }`}
-      aria-label='scroll to bottom'
+      aria-label='Scroll to bottom'
       onClick={scrollToBottom}
     >
-      <DownArrow />
+      <DownArrow className="w-5 h-5" />
     </button>
   );
 });

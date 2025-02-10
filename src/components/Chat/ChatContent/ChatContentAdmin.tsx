@@ -2,9 +2,6 @@
 import ScrollToBottom from 'react-scroll-to-bottom';
 import useStore from '@store/store';
 import ScrollToBottomButton from './ScrollToBottomButton';
-import Message from './Message';
-import InputMessage from './Message/InputMessage';
-import { ExamplePromptsComponent } from '@components/ExamplePrompts';
 import InputMessageAdmin from './Message/InputMessageAdmin';
 import MessageAdmin from './Message/MessageAdmin';
 
@@ -58,11 +55,6 @@ const ChatContentAdmin = () => {
                 )
               ))}
             </div>
-            {!hasUserMessages && !hasAdminMessages && (
-              <div className="w-full">
-                <ExamplePromptsComponent />
-              </div>
-            )}
           </div>
         </ScrollToBottom>
       </div>
