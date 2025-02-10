@@ -11,6 +11,7 @@ const useInitialiseNewAdminChat = () => {
 
   const initialiseNewAdminChat = (thread: any) => {
     const obj = generateDefaultAdminChat(thread.id, thread.title);
+    console.log(thread)
     thread.messages.forEach((message : any) => {
       obj.messages.push({
         role: message.role,

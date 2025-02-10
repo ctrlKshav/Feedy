@@ -45,7 +45,7 @@ function Admin() {
         });
   
         if (exists == undefined || !exists) {
-          addAdminChat(thread.id, thread.title);
+          addAdminChat(thread);
           thread.messages.forEach((message) => {
             chats && chats[index].messages.push({
               role: message.role,
