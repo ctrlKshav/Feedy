@@ -20,6 +20,7 @@ import useAddAdminChat from '@hooks/admin/useAddAdminChat';
 import supabase from '@utils/supabase';
 import { fetchUserId } from '@utils/auth';
 import { useAuth } from './context/UserAuthProvider';
+import { Loader2 } from 'lucide-react';
 
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
@@ -97,7 +98,11 @@ function  AppChild() {
 
 function App() {
   return (
-      <Suspense fallback={<div>realshiz</div>}>
+      <Suspense fallback={
+        <div className='bg-gray-800 min-h-screen flex justify-center items-center'>
+          <Loader2  className='text-white '/>
+        </div>
+      }>
         <AppChild />
       </Suspense>
   );

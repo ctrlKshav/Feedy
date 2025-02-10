@@ -1,8 +1,9 @@
-﻿import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+﻿import { createContext, ReactNode, Suspense, useContext, useEffect, useState } from "react";
 import supabase from "@utils/supabase"
 import { User } from "@supabase/supabase-js";
 import { fetchUserFromProfiles, fetchUserId } from "@utils/auth";
 import App from "@src/App";
+import { Loader2 } from "lucide-react";
 
 const UserAuthContext = createContext({});
 
@@ -36,13 +37,20 @@ const UserAuthProvider = () => {
   }, []);
   
   return (
-    <UserAuthContext.Provider
-      value={{
-        user,
-        adminId,
-      }}>
-      {!loading && <App />}
-    </UserAuthContext.Provider>
+    
+      <UserAuthContext.Provider
+        value={{
+          user,
+          adminId,
+        }}>
+          {loading && 
+          <div className='bg-gray-800 min-h-screen flex justify-center items-center'>
+            <Loader2  className='text-white '/>
+          </div>}
+
+          {!loading && <App />}
+      </UserAuthContext.Provider>
+
   );
 };
 

@@ -17,12 +17,14 @@ import { fetchConversationsFromSupabase } from '@utils/supabaseOperations';
 import useInitialiseNewAdminChat from '@hooks/admin/useInitialiseNewAdminChat';
 import useAddAdminChat from '@hooks/admin/useAddAdminChat';
 import { useAuth } from './context/AdminAuthProvider';
+import { Suspense } from 'react';
+import { Loader2 } from 'lucide-react';
 import ChatAdmin from '@components/Chat/ChatAdmin';
 
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
 
-function Admin() {
+function AdminChild() {
   const initialiseNewChat = useInitialiseNewAdminChat();
   const addAdminChat = useAddAdminChat();
   const setChats = useStore((state) => state.setChats);
@@ -96,6 +98,18 @@ function Admin() {
       {/* <ApiPopup /> */}
       <Toast />
     </div>
+  );
+}
+
+function Admin() {
+  return (
+      <Suspense fallback={
+        <div className='bg-gray-800 min-h-screen flex justify-center items-center'>
+          <Loader2  className='text-white '/>
+        </div>
+      }>
+        <AdminChild />
+      </Suspense>
   );
 }
 
