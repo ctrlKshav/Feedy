@@ -139,7 +139,7 @@ const EditView = ({
       setIsEdit(false);
     }
     setChats(updatedChats);
-    handleSubmit(attachments[0], _content);
+    handleSubmit(attachments, _content);
   };
 
   useEffect(() => {

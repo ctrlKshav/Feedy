@@ -6,14 +6,14 @@ export interface AnalysisResponse {
   status: string;
 }
 
-export const getImageAnalysis = async (
-  imageFile: File,
-  question: string
-): Promise<AnalysisResponse> => {
-  const formData = new FormData();
-  formData.append('image', imageFile);
-  formData.append('question', question);
 
+export const getImageAnalysis = async (
+  images: File[],
+  question: string
+): Promise<AnalysisResponse[]> => {
+  const formData = new FormData();
+  formData.append('question', question);
+  images.forEach(image => formData.append('images', image));
   const response = await fetch('http://localhost:8000/analyze-image', {
     method: 'POST',
     body: formData,
@@ -30,6 +30,7 @@ export const getImageAnalysis = async (
   }
 
   const data = await response.json();
+  console.log(data)
   return data;
 };
 

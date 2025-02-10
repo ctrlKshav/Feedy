@@ -20,34 +20,39 @@ const useSubmit = () => {
 
 
 
-  const handleSubmit = async (imageFile: File, question: string) => {
+  const handleSubmit = async (images: File[], question: string) => {
     if (generating) return;
     setGenerating(true);
 
     try {
       // Get the analysis from the backend
-      const analysis = await getImageAnalysis(imageFile, question);
+      const analyses = await getImageAnalysis(images, question);
       
       // Update the chat with the assistant's response
       const updatedChats: ChatInterface[] = JSON.parse(
         JSON.stringify(useStore.getState().chats)
       );
       
-      // Add assistant's response
-      updatedChats[currentChatIndex].messages.push({
-        role: 'assistant',
-        content: analysis.response,
-      });
+      analyses.forEach((analysis) => {
+        // Add assistant's response
+        updatedChats[currentChatIndex].messages.push({
+          role: 'assistant',
+          content: analysis.response,
+        });
 
-      const supabaseResponse = saveConversationToSupabase(
-      user,
-      adminId,
-      analysis.response,
-      [imageFile],
-      "assistant",
-      updatedChats,
-      currentChatIndex
-    );      
+        const supabaseResponse = saveConversationToSupabase(
+          user,
+          adminId,
+          analysis.response,
+          images,
+          "assistant",
+          updatedChats,
+          currentChatIndex
+        );    
+      })
+      
+
+        
       setChats(updatedChats);
     } catch (e: unknown) {
       const err = (e as Error).message;
