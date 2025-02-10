@@ -14,8 +14,6 @@ import remarkMath from 'remark-math';
 import remarkGfm from 'remark-gfm';
 import useStore from '@store/store';
 
-import TickIcon from '@icon/TickIcon';
-import CrossIcon from '@icon/CrossIcon';
 
 import useSubmit from '@hooks/useSubmit';
 
@@ -23,13 +21,7 @@ import { ChatInterface } from '@type/chat';
 
 import { codeLanguageSubset } from '@constants/chat';
 
-import RefreshButton from './Button/RefreshButton';
-import UpButton from './Button/UpButton';
-import DownButton from './Button/DownButton';
 import CopyButton from './Button/CopyButton';
-import EditButton from './Button/EditButton';
-import DeleteButton from './Button/DeleteButton';
-import MarkdownModeButton from './Button/MarkdownModeButton';
 
 import CodeBlock from '../CodeBlock';
 import { Paperclip, FileText, Image, File, FileCode, FileSpreadsheet, FileAudio, FileVideo } from 'lucide-react';
@@ -80,109 +72,160 @@ const ContentView = memo(
     const currentMessage = messages?.[messageIndex];
     const attachments = currentMessage?.attachments;
 
-    const handleDelete = () => {
-      const updatedChats: ChatInterface[] = JSON.parse(
-        JSON.stringify(useStore.getState().chats)
-      );
-      updatedChats[currentChatIndex].messages.splice(messageIndex, 1);
-      setChats(updatedChats);
-    };
-
     const handleCopy = () => {
       navigator.clipboard.writeText(content);
     };
 
-    return (
-      <div className='relative flex flex-col gap-3 pb-2'>
-        <div className='markdown prose w-full break-words dark:prose-invert dark'>
-        {markdownMode ? (
-          <ReactMarkdown
-            remarkPlugins={[
-              remarkGfm,
-              [remarkMath, { singleDollarTextMath: inlineLatex }],
-            ]}
-            rehypePlugins={[
-              rehypeKatex,
-              [
-                rehypeHighlight,
-                {
-                  detect: true,
-                  ignoreMissing: true,
-                  subset: codeLanguageSubset,
-                },
-              ],
-            ]}
-            linkTarget='_new'
-            components={{
-              code,
-              p,
-            }}
-          >
-            {content}
-          </ReactMarkdown>
-        ) : (
-          <span className='whitespace-pre-wrap'>{content}</span>
-        )}
-          {attachments && attachments.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-2 justify-end">
-            {attachments.map((attachment: Attachment, index: number) => (
-              <a
-                key={index}
-                href={attachment.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 p-2 text-sm rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-700 no-underline text-white"
+    const CopyButtonElement = () =>
+      !isDelete ? (
+        <div className='opacity-0 group-hover:opacity-100 transition-opacity'>
+          <CopyButton onClick={handleCopy} />
+        </div>
+      ) : (
+        <></>
+      );
+
+      if (role === 'user') {
+        return (
+          <div className='relative flex flex-col items-end gap-2 pb-2 group'>
+            <div className='flex-grow flex flex-col items-end markdown prose w-full break-words dark:prose-invert dark'>
+              <ReactMarkdown
+                remarkPlugins={[
+                  remarkGfm,
+                  [remarkMath, { singleDollarTextMath: inlineLatex }],
+                ]}
+                rehypePlugins={[
+                  rehypeKatex,
+                  [
+                    rehypeHighlight,
+                    {
+                      detect: true,
+                      ignoreMissing: true,
+                      subset: codeLanguageSubset,
+                    },
+                  ],
+                ]}
+                linkTarget='_new'
+                components={{
+                  code,
+                  p,
+                }}
               >
-                {getFileIcon(attachment.type)}
-                <span className="text-xs text-black dark:text-white">
-                  {attachment.name.length > 20 
-                    ? `${attachment.name.substring(0, 15)}...${attachment.name.split('.').pop()}`
-                    : attachment.name}
-                </span>
-              </a>
-            ))}
+                {content}
+              </ReactMarkdown>
+              <div className=' flex flex-wrap gap-4 items-center'>
+                {attachments && attachments.length > 0 && (
+                  <div className={`flex flex-wrap order-2`}>
+                    {attachments.map((attachment: Attachment, index: number) => (
+                      <a
+                        key={index}
+                        href={attachment.url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='flex items-center gap-2 p-2 text-sm rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-700 no-underline text-white'
+                      >
+                        {getFileIcon(attachment.type)}
+                        <span className='text-xs text-black dark:text-white'>
+                          {attachment.name.length > 20
+                            ? `${attachment.name.substring(
+                                0,
+                                15
+                              )}...${attachment.name.split('.').pop()}`
+                            : attachment.name}
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                )}
+                <CopyButtonElement />
+              </div>
+            </div>
           </div>
-        )}
+        );
+      }
+  
+      return (
+        <div className='relative flex flex-col items-start gap-2 pb-2 group'>
+          <div className='flex-grow flex flex-col items-start markdown prose w-full break-words dark:prose-invert dark'>
+            <ReactMarkdown
+              remarkPlugins={[
+                remarkGfm,
+                [remarkMath, { singleDollarTextMath: inlineLatex }],
+              ]}
+              rehypePlugins={[
+                rehypeKatex,
+                [
+                  rehypeHighlight,
+                  {
+                    detect: true,
+                    ignoreMissing: true,
+                    subset: codeLanguageSubset,
+                  },
+                ],
+              ]}
+              linkTarget='_new'
+              components={{
+                code,
+                p,
+              }}
+            >
+              {content}
+            </ReactMarkdown>
+            <div className='flex flex-wrap gap-4 items-center'>
+              {attachments && attachments.length > 0 && (
+                <div className='flex flex-wrap'>
+                  {attachments.map((attachment: Attachment, index: number) => (
+                    <a
+                      key={index}
+                      href={attachment.url}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='flex items-center gap-2 p-2 text-sm rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-700 no-underline text-white'
+                    >
+                      {getFileIcon(attachment.type)}
+                      <span className='text-xs text-black dark:text-white'>
+                        {attachment.name.length > 20
+                          ? `${attachment.name.substring(0, 15)}...${attachment.name.split('.').pop()}`
+                          : attachment.name}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              )}
+              <CopyButtonElement />
+            </div>
+          </div>
         </div>
-        <div className={`flex ${role === "user" ? "justify-end" : "justify-start"} gap-2 w-full mt-2 `}>
-          {isDelete || (
-            <>
-              <MarkdownModeButton />
-              <CopyButton onClick={handleCopy} />
-            </>
-          )}
-         
-        </div>
-      </div>
-    );
-  }
-);
-
-const code = memo((props: CodeProps) => {
-  const { inline, className, children } = props;
-  const match = /language-(\w+)/.exec(className || '');
-  const lang = match && match[1];
-
-  if (inline) {
-    return <code className={className}>{children}</code>;
-  } else {
-    return <CodeBlock lang={lang || 'text'} codeChildren={children} />;
-  }
-});
-
-const p = memo(
-  (
-    props?: Omit<
-      DetailedHTMLProps<
-        HTMLAttributes<HTMLParagraphElement>,
-        HTMLParagraphElement
-      >,
-      'ref'
-    > &
-      ReactMarkdownProps
-  ) => {
-    return <p className='whitespace-pre-wrap'>{props?.children}</p>;
-  }
-);
+      );
+    }
+  );
+  
+  
+  const code = memo((props: CodeProps) => {
+    const { inline, className, children } = props;
+    const match = /language-(\w+)/.exec(className || '');
+    const lang = match && match[1];
+  
+    if (inline) {
+      return <code className={className}>{children}</code>;
+    } else {
+      return <CodeBlock lang={lang || 'text'} codeChildren={children} />;
+    }
+  });
+  
+  const p = memo(
+    (
+      props?: Omit<
+        DetailedHTMLProps<
+          HTMLAttributes<HTMLParagraphElement>,
+          HTMLParagraphElement
+        >,
+        'ref'
+      > &
+        ReactMarkdownProps
+    ) => {
+      return <p className='whitespace-pre-wrap'>{props?.children}</p>;
+    }
+  );
 
 export default ContentView;
