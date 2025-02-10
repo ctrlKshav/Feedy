@@ -7,7 +7,7 @@ import InputMessage from './Message/InputMessage';
 import useSubmit from '@hooks/useSubmit';
 import { ExamplePromptsComponent } from '@components/ExamplePrompts';
 import InputMessageAdmin from './Message/InputMessageAdmin';
-import MessageAdmin from './Message';
+import MessageAdmin from './Message/MessageAdmin';
 
 const ChatContentAdmin = () => {
   const inputRole = useStore((state) => state.inputRole);
@@ -68,7 +68,7 @@ const ChatContentAdmin = () => {
         </ScrollToBottom>
       </div>
       <div className='w-full dark:bg-gray-800'>
-        <InputMessageAdmin role={inputRole} content='' messageIndex={stickyIndex} />
+        <InputMessageAdmin role={"admin"} content='' messageIndex={stickyIndex} />
       </div>
     </div>
   );

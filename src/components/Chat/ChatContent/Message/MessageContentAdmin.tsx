@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import useStore from '@store/store';
 
 import ContentView from './View/ContentView';
-import EditView from './View/EditView';
+import EditViewAdmin from './View/EditViewAdmin';
+import ContentViewAdmin from './View/ContentViewAdmin';
 
-const MessageContent = ({
+const MessageContentAdmin = ({
   role,
   content,
   messageIndex,
@@ -21,14 +22,14 @@ const MessageContent = ({
   return (
     <div className='relative flex flex-col gap-2 md:gap-3 '>
       {isEdit ? (
-        <EditView
+        <EditViewAdmin
           content={content}
           setIsEdit={setIsEdit}
           messageIndex={messageIndex}
           sticky={sticky}
         />
       ) : (
-        <ContentView
+        <ContentViewAdmin
           role={role}
           content={content}
           setIsEdit={setIsEdit}
@@ -39,4 +40,4 @@ const MessageContent = ({
   );
 };
 
-export default MessageContent;
+export default MessageContentAdmin;

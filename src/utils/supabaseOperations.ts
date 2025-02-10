@@ -7,7 +7,7 @@ export const saveConversationToSupabase = async (user:User,adminId: string, cont
     , inputRole: string, updatedChats: ChatInterface[], currentChatIndex: number
 ) => {
 
-    if(user.role === "user"){
+    if(user?.role === "user"){
     const threadResponse = await supabase
       .from('threads')
       .upsert({

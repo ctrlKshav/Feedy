@@ -6,6 +6,7 @@ import MessageContent from './MessageContent';
 
 import { Role } from '@type/chat';
 import RoleSelector from './RoleSelector';
+import MessageContentAdmin from './MessageContentAdmin';
 
 const backgroundStyle = ['dark:bg-gray-800', 'bg-gray-50 dark:bg-gray-650'];
 
@@ -35,7 +36,7 @@ const InputMessageAdmin = React.memo(
           }`}
         >
           <div className='w-full '>
-            <MessageContent
+            <MessageContentAdmin
               role={role}
               content={content}
               messageIndex={messageIndex}
