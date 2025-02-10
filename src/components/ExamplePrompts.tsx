@@ -30,9 +30,7 @@ export const ExamplePromptsComponent: React.FC<{setInputMessage: Dispatch<SetSta
   const generating = useStore((state) => state.generating);
 
   const handlePromptClick = async (prompt: string) => {
-    console.log(prompt)
     if (generating) return;
-    console.log(prompt)
     setInputMessage(prompt)
 
   };

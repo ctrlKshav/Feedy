@@ -17,8 +17,6 @@ const MessageContent = ({
 }) => {
   const [isEdit, setIsEdit] = useState<boolean>(sticky);
   const advancedMode = useStore((state) => state.advancedMode);
-  console.log("yellu")
-  console.log(content)
 
   return (
     <div className='relative flex flex-col gap-2 md:gap-3 '>

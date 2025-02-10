@@ -19,8 +19,6 @@ const InputMessage = React.memo(
     content: string;
     messageIndex: number;
   }) => {
-    console.log("hellu")
-    console.log(content)
     const hideSideMenu = useStore((state) => state.hideSideMenu);
     // const advancedMode = useStore((state) => state.advancedMode);
     const advancedMode = false;

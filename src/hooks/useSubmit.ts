@@ -47,11 +47,7 @@ const useSubmit = () => {
       "assistant",
       updatedChats,
       currentChatIndex
-    );
-    console.log(supabaseResponse)
-      
-
-      
+    );      
       setChats(updatedChats);
     } catch (e: unknown) {
       const err = (e as Error).message;

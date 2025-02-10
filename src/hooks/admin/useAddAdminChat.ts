@@ -17,9 +17,7 @@ const useAddAdminChat = () => {
     
       if(chats){
         const obj = generateDefaultAdminChat(thread.id, thread.title, folder)
-        console.log(thread.messages)
         const sortedMessages = thread.messages.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-        console.log(sortedMessages)
         sortedMessages.forEach((message : any) => {
           obj.messages.push({
             role: message.role,

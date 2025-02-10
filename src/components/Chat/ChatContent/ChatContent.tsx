@@ -38,7 +38,6 @@ const ChatContent = () => {
   const [inputMessage, setInputMessage] = useState('');
 
   useEffect(() => {
-    console.log(inputMessage)
     if (generating) {
       setError('');
     }
