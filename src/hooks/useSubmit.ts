@@ -4,6 +4,8 @@ import useStore from '@store/store';
 import { useTranslation } from 'react-i18next';
 import { Attachment, ChatInterface } from '@type/chat';
 import { getImageAnalysis } from '@api/api';
+import { saveConversationToSupabase } from '@utils/supabaseOperations';
+import { useAuth } from '@src/context/UserAuthProvider';
 
 const useSubmit = () => {
   const { t } = useTranslation('api');
@@ -11,8 +13,12 @@ const useSubmit = () => {
   const setError = useStore((state) => state.setError);
   const setGenerating = useStore((state) => state.setGenerating);
   const generating = useStore((state) => state.generating);
-  const currentChatIndex = useStore((state) => state.currentChatIndex);
   const setChats = useStore((state) => state.setChats);
+  const inputRole = useStore((state) => state.inputRole);
+  const currentChatIndex = useStore((state) => state.currentChatIndex);
+  const {user,adminId} = useAuth();
+
+
 
   const handleSubmit = async (imageFile: File, question: string) => {
     if (generating) return;
@@ -32,6 +38,19 @@ const useSubmit = () => {
         role: 'assistant',
         content: analysis.response,
       });
+
+      const supabaseResponse = saveConversationToSupabase(
+      user,
+      adminId,
+      analysis.response,
+      [imageFile],
+      "assistant",
+      updatedChats,
+      currentChatIndex
+    );
+    console.log(supabaseResponse)
+      
+
       
       setChats(updatedChats);
     } catch (e: unknown) {

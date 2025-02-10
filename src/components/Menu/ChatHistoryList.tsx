@@ -41,7 +41,7 @@ const ChatHistoryList = (props: { loading: boolean }) => {
     const _folders: ChatHistoryFolderInterface = {};
     const _noFolders: ChatHistoryInterface[] = [];
     const chats = useStore.getState().chats;
-    console.log(chats);
+    // console.log(chats);
     const folders = useStore.getState().folders;
 
     Object.values(folders)
@@ -127,7 +127,7 @@ const ChatHistoryList = (props: { loading: boolean }) => {
   useEffect(() => {
     filterRef.current = filter;
     updateFolders();
-    console.log(noChatFolders);
+    // console.log(noChatFolders);
   }, [filter]);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
