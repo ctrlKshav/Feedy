@@ -100,7 +100,7 @@ function  AppChild() {
 function App() {
   return (
       <Suspense fallback={
-        <Skeleton />
+        <Skeleton /> 
       }>
         <AppChild />
       </Suspense>
