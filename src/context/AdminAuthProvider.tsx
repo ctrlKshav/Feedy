@@ -1,7 +1,7 @@
 ﻿import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import supabase from "@utils/supabase"
 import { User } from "@supabase/supabase-js";
-import { fetchUserId } from "@utils/auth";
+import { fetchUserFromProfiles, fetchUserId } from "@utils/auth";
 import Admin from "@src/Admin";
 
 const AdminAuthContext = createContext({});
@@ -24,10 +24,10 @@ const AdminAuthProvider = () => {
     const getUser = async () => {
         
     const {data} = await login("admin@gmail.com", "realadmin")
+    const {fetchedProfile: currentUser, fetchProfileError} = await fetchUserFromProfiles("admin@gmail.com")
     const {fetchedData, fetchError} = await fetchUserId("user@gmail.com")
 
 
-    const { user: currentUser } = data;
     setUser(currentUser ?? null);
     setAdminId(fetchedData?.id)
 

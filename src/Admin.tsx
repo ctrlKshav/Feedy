@@ -17,6 +17,7 @@ import { fetchConversationsFromSupabase } from '@utils/supabaseOperations';
 import useInitialiseNewAdminChat from '@hooks/admin/useInitialiseNewAdminChat';
 import useAddAdminChat from '@hooks/admin/useAddAdminChat';
 import { useAuth } from './context/AdminAuthProvider';
+import ChatAdmin from '@components/Chat/ChatAdmin';
 
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
@@ -91,7 +92,7 @@ function Admin() {
   return (
     <div className='overflow-hidden w-full h-full relative'>
       <Menu1 />
-      <Chat />
+      <ChatAdmin />
       {/* <ApiPopup /> */}
       <Toast />
     </div>

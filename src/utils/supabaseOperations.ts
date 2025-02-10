@@ -7,6 +7,7 @@ export const saveConversationToSupabase = async (user:User,adminId: string, cont
     , inputRole: string, updatedChats: ChatInterface[], currentChatIndex: number
 ) => {
 
+    if(user.role === "user"){
     const threadResponse = await supabase
       .from('threads')
       .upsert({
@@ -25,12 +26,33 @@ export const saveConversationToSupabase = async (user:User,adminId: string, cont
       })
 
       return { threadResponse, messageResponse };
+    }
+    else {
+      const threadResponse = await supabase
+      .from('threads')
+      .upsert({
+        id: updatedChats[currentChatIndex].id,
+        title: updatedChats[currentChatIndex].title,
+        admin_id: user?.id,
+        user_id: adminId
+      });
+
+    const messageResponse = await supabase
+      .from('messages')
+      .upsert({
+        thread_id: updatedChats[currentChatIndex].id,
+        role: inputRole,
+        content: content,
+      })
+
+      return { threadResponse, messageResponse };
+    }
 
 }
 
 export const fetchConversationsFromSupabase = async (user:(User | null), adminId: string ) => {
   console.log(user)
-  if(user?.email?.includes("admin")){
+  if(user?.role === "admin"){
     const { data : threadsData, error: threadsError } = await supabase
     .from('threads')
     .select(`

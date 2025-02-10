@@ -12,7 +12,7 @@ import StopGeneratingButton from '@components/StopGeneratingButton/StopGeneratin
 
 import { saveConversationToSupabase } from '@utils/supabaseOperations';
 import { authLoader, fetchUserId } from '@utils/auth';
-import { useAuth } from '@src/context/UserAuthProvider';
+import { useAuth } from '@src/context/AdminAuthProvider';
 
 const loader = async () => {
   const {authData, authError} = await authLoader("user@gmail.com", "realuser");
@@ -20,7 +20,7 @@ const loader = async () => {
   return { authData, fetchedData };
 };
 
-const EditView = ({
+const EditViewAdmin = ({
   content,
   setIsEdit,
   messageIndex,
@@ -34,8 +34,8 @@ const EditView = ({
   const setGenerating = useStore((state) => state.setGenerating);
 
 
-
   const inputRole = useStore((state) => state.inputRole);
+  const setInputRole = useStore((state) => state.setInputRole);
   const setChats = useStore((state) => state.setChats);
   const currentChatIndex = useStore((state) => state.currentChatIndex);
 
@@ -93,7 +93,9 @@ const EditView = ({
     const updatedChats: ChatInterface[] = JSON.parse(
       JSON.stringify(useStore.getState().chats)
     );
-    
+    if(user.role === "admin")
+      setInputRole('admin')
+      
     const supabaseResponse = saveConversationToSupabase(user,adminId, _content, attachments ,
       inputRole, updatedChats, currentChatIndex
   )
@@ -104,7 +106,7 @@ const EditView = ({
     if (sticky) {
       if (_content !== '' || attachments.length > 0) {
         updatedMessages.push({
-          role: inputRole,
+          role: user.role,
           content: _content,
           attachments: attachments.map(file => ({
             name: file.name,
@@ -227,4 +229,4 @@ const EditView = ({
   );
 };
 
-export default EditView;
+export default EditViewAdmin;

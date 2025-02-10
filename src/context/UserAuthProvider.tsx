@@ -1,7 +1,7 @@
 ﻿import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import supabase from "@utils/supabase"
 import { User } from "@supabase/supabase-js";
-import { fetchUserId } from "@utils/auth";
+import { fetchUserFromProfiles, fetchUserId } from "@utils/auth";
 import App from "@src/App";
 
 const UserAuthContext = createContext({});
@@ -23,9 +23,10 @@ const UserAuthProvider = () => {
     const getUser = async () => {
         
     const {data} = await login("user@gmail.com", "realuser")
+    const {fetchedProfile : currentUser, fetchProfileError } = await fetchUserFromProfiles("user@gmail.com")
     const {fetchedData, fetchError} = await fetchUserId("admin@gmail.com")
 
-    const { user: currentUser } = data;
+    console.log(currentUser)
     setUser(currentUser ?? null);
     setAdminId(fetchedData?.id)
     

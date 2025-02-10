@@ -38,6 +38,8 @@ function  AppChild() {
   
   useEffect(() => {
     const func = async () => {
+      console.log("hello")
+      console.log(user)
       const { threadsData, threadsError } = await fetchConversationsFromSupabase(user, adminId);
   
       threadsData?.forEach(async (thread) => {

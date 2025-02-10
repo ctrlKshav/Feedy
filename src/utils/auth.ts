@@ -21,3 +21,14 @@ export const fetchUserId = async ( email : string) => {
   return { fetchedData, fetchError };
 }
 
+export const fetchUserFromProfiles = async ( email : string) => {
+  const { data: fetchedProfile, error: fetchProfileError } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('email', email)
+    .single();
+
+  return { fetchedProfile, fetchProfileError };
+}
+
+
