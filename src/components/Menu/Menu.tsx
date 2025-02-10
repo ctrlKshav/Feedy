@@ -6,9 +6,10 @@ import NewChat from './NewChat';
 import NewFolder from './NewFolder';
 import ChatHistoryList from './ChatHistoryList';
 import MenuOptions from './MenuOptions';
+import { Loader2 } from 'lucide-react';
 
 
-const Menu = () => {
+const Menu = (props: {loading: boolean}) => {
   const hideSideMenu = useStore((state) => state.hideSideMenu);
   const setHideSideMenu = useStore((state) => state.setHideSideMenu);
 
@@ -44,8 +45,16 @@ const Menu = () => {
                 <NewChat />
                 <NewFolder />
               </div>
-              <ChatHistoryList />
-              <MenuOptions />
+              { props.loading ? 
+              <div className='flex justify-center'>
+                <Loader2 className='text-white  h-5 w-5' />
+              </div> : (
+                <>
+                  <ChatHistoryList loading={props.loading}/>
+                  <MenuOptions />
+                </>
+              )}
+              
             </nav>
           </div>
         </div>

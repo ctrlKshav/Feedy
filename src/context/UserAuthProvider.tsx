@@ -26,7 +26,6 @@ const UserAuthProvider = () => {
     const {fetchedProfile : currentUser, fetchProfileError } = await fetchUserFromProfiles("user@gmail.com")
     const {fetchedData, fetchError} = await fetchUserId("admin@gmail.com")
 
-    console.log(currentUser)
     setUser(currentUser ?? null);
     setAdminId(fetchedData?.id)
     

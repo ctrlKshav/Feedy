@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { BrowserRouter } from "react-router";
 
 import useStore from '@store/store';
@@ -33,13 +33,13 @@ function  AppChild() {
   const addAdminChat = useAddAdminChat();
   const chats = useStore.getState().chats;
   const currentChatIndex = useStore.getState().currentChatIndex;
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {user, adminId} = useAuth();
   
   useEffect(() => {
     const func = async () => {
-      console.log("hello")
-      console.log(user)
+      setLoading(true)
       const { threadsData, threadsError } = await fetchConversationsFromSupabase(user, adminId);
   
       threadsData?.forEach(async (thread) => {
@@ -48,47 +48,46 @@ function  AppChild() {
           return chat.id === thread.id; // Exits early if condition is met
         });
         if (exists == undefined || !exists) {
-          console.log("haiya")
           await addAdminChat(thread);
-          console.log("baiya")
 
         }
       });
+      setLoading(false)
     };
   
     if (user) func();
   },[]);
   
 
-  // useEffect(() => {
-  //   document.documentElement.lang = i18n.language;
-  //   i18n.on('languageChanged', (lng) => {
-  //     document.documentElement.lang = lng;
-  //   });
-  // }, []);
+  useEffect(() => {
+    document.documentElement.lang = i18n.language;
+    i18n.on('languageChanged', (lng) => {
+      document.documentElement.lang = lng;
+    });
+  }, []);
 
-  // useEffect(() => {
-  //   // legacy local storage
-  //   const oldChats = localStorage.getItem('chats');
-  //   const apiKey = localStorage.getItem('apiKey');
-  //   const theme = localStorage.getItem('theme');
+  useEffect(() => {
+    // legacy local storage
+    const oldChats = localStorage.getItem('chats');
+    const apiKey = localStorage.getItem('apiKey');
+    const theme = localStorage.getItem('theme');
 
-  //   if (apiKey) {
-  //     // legacy local storage
-  //     setApiKey(apiKey);
-  //     localStorage.removeItem('apiKey');
-  //   }
+    if (apiKey) {
+      // legacy local storage
+      setApiKey(apiKey);
+      localStorage.removeItem('apiKey');
+    }
 
-  //   if (theme) {
-  //     // legacy local storage
-  //     setTheme(theme as Theme);
-  //     localStorage.removeItem('theme');
-  //   }
-  // }, []);
+    if (theme) {
+      // legacy local storage
+      setTheme(theme as Theme);
+      localStorage.removeItem('theme');
+    }
+  }, []);
 
   return (
     <div className='overflow-hidden w-full h-full relative'>
-      <Menu />
+      <Menu loading={loading} />
       <Chat />
       {/* <ApiPopup /> */}
       <Toast />

@@ -13,28 +13,21 @@ const useAddAdminChat = () => {
   const addAdminChat =  async (thread: any, folder?:string,) => {
     const chats = useStore.getState().chats;
     const realChat = chats
-    console.log("Behaviour")
-    console.log(realChat)
     
-    console.log(currentChatIndex)
       if(chats){
         const obj = generateDefaultAdminChat(thread.id, thread.title, folder)
-        console.log("haha")
         thread.messages.forEach((message : any) => {
           obj.messages.push({
             role: message.role,
             content: message.content,
           });
         })
-        console.log("pushing p")
         chats.unshift(obj);
         setChats(chats);
         setCurrentChatIndex(currentChatIndex+1);
       }
       else{
-        console.log("tf")
          initialiseNewAdminChat(thread)
-        console.log("why?")
       }
       
   };

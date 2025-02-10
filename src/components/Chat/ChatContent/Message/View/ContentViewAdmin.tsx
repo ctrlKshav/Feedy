@@ -64,8 +64,6 @@
     : ContentViewProps
   ) => {
     
-      console.log("try")   
-      console.log(role)
       const { handleSubmit } = useSubmit();
   
       const [isDelete, setIsDelete] = useState<boolean>(false);

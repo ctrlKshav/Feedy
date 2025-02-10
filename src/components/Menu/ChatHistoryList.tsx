@@ -13,7 +13,7 @@ import {
   FolderCollection,
 } from '@type/chat';
 
-const ChatHistoryList = () => {
+const ChatHistoryList = (props: {loading: boolean}) => {
   const currentChatIndex = useStore((state) => state.currentChatIndex);
   const setChats = useStore((state) => state.setChats);
   const setFolders = useStore((state) => state.setFolders);
@@ -39,6 +39,7 @@ const ChatHistoryList = () => {
     const _folders: ChatHistoryFolderInterface = {};
     const _noFolders: ChatHistoryInterface[] = [];
     const chats = useStore.getState().chats;
+    console.log(chats)
     const folders = useStore.getState().folders;
 
     Object.values(folders)
@@ -124,6 +125,7 @@ const ChatHistoryList = () => {
   useEffect(() => {
     filterRef.current = filter;
     updateFolders();
+    console.log(noChatFolders)
   }, [filter]);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {

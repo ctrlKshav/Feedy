@@ -11,7 +11,6 @@ const useInitialiseNewAdminChat = () => {
 
   const initialiseNewAdminChat = (thread: any) => {
     const obj = generateDefaultAdminChat(thread.id, thread.title);
-    console.log(thread)
     thread.messages.forEach((message : any) => {
       obj.messages.push({
         role: message.role,
@@ -19,11 +18,8 @@ const useInitialiseNewAdminChat = () => {
       });
     })
     
-    console.log(obj)
     setChats([obj]) ;
     setCurrentChatIndex(0);
-    console.log(chats)
-    console.log(currentChatIndex)
   };
 
   return initialiseNewAdminChat;
