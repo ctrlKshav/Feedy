@@ -32,24 +32,39 @@ const useSubmit = () => {
       const updatedChats: ChatInterface[] = JSON.parse(
         JSON.stringify(useStore.getState().chats)
       );
+      let netResponse = "";
       
-      analyses.forEach((analysis) => {
-        // Add assistant's response
-        updatedChats[currentChatIndex].messages.push({
-          role: 'assistant',
-          content: analysis.response,
-        });
 
-        const supabaseResponse = saveConversationToSupabase(
-          user,
-          adminId,
-          analysis.response,
-          images,
-          "assistant",
-          updatedChats,
-          currentChatIndex
-        );    
+      const attachments = analyses.map((analysis) => {
+        
+        netResponse += analysis.image_name + " : \n" + analysis.response + "\n"
+
+        return {
+          url: analysis.image_url,
+          name: analysis.image_name,
+          type: "image"
+        }
+
       })
+
+
+        // Add assistant's response
+      updatedChats[currentChatIndex].messages.push({
+        role: 'assistant',
+        content: netResponse,
+        attachments: attachments,
+      });
+
+
+        // const supabaseResponse = saveConversationToSupabase(
+        //   user,
+        //   adminId,
+        //   analysis.response,
+        //   images,
+        //   "assistant",
+        //   updatedChats,
+        //   currentChatIndex
+        // );    
       
 
         

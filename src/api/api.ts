@@ -4,6 +4,8 @@ import { Attachment } from "@type/chat";
 export interface AnalysisResponse {
   response: string;
   status: string;
+  image_url: string;
+  image_name: string;
 }
 
 
