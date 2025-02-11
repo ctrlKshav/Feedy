@@ -32,13 +32,17 @@ const useSubmit = () => {
       const updatedChats: ChatInterface[] = JSON.parse(
         JSON.stringify(useStore.getState().chats)
       );
-      let netResponse = "";
+      let netResponse = ``;
       
 
       const attachments = analyses.map((analysis) => {
         
-        netResponse += analysis.image_name + " : \n" + analysis.response + "\n"
-
+        
+        let tempResponse = `\n ${analysis.image_name} : \n
+        ${analysis.response} \n`
+        netResponse = netResponse + tempResponse
+        console.log(netResponse, tempResponse)
+        
         return {
           url: analysis.image_url,
           name: analysis.image_name,
