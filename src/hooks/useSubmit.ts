@@ -57,17 +57,17 @@ const useSubmit = () => {
         attachments: attachments,
       });
 
-      // const updateResponse = updateUserAttachments(messageId, attachments);
+      const updateResponse = updateUserAttachments(messageId, attachments);
 
-      // const supabaseResponse = saveConversationToSupabase(
-      //   user,
-      //   adminId,
-      //   netResponse,
-      //   "assistant",
-      //   updatedChats,
-      //   currentChatIndex,
-      //   attachments,
-      // );    
+      const supabaseResponse = saveConversationToSupabase(
+        user,
+        adminId,
+        netResponse,
+        "assistant",
+        updatedChats,
+        currentChatIndex,
+        attachments,
+      );    
       
       setChats(updatedChats);
     } catch (e: unknown) {

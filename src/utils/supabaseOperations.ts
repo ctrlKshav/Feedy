@@ -15,16 +15,18 @@ export const saveConversationToSupabase = async (user:User | null,adminId: strin
       title: updatedChats[currentChatIndex].title,
       user_id: user?.id,
       admin_id: adminId
-    });
+    })
+    .select();
 
   const messageResponse = await supabase
     .from('messages')
-    .upsert({
+    .insert({
       thread_id: updatedChats[currentChatIndex].id,
       role: inputRole,
       content: content,
       attachments: attachments ? attachments : null,
     })
+    .select();
 
     return { threadResponse, messageResponse };
   }
@@ -36,15 +38,17 @@ export const saveConversationToSupabase = async (user:User | null,adminId: strin
       title: updatedChats[currentChatIndex].title,
       admin_id: user?.id,
       user_id: adminId
-    });
+    })
+    .select();
 
   const messageResponse = await supabase
     .from('messages')
-    .upsert({
+    .insert({
       thread_id: updatedChats[currentChatIndex].id,
       role: inputRole,
       content: content,
     })
+    .select('id')
 
     return { threadResponse, messageResponse };
   }
@@ -94,7 +98,7 @@ export const updateUserAttachments = async (
   
   return await supabase
     .from('messages')
-    .upsert({
+    .update({
       attachments: attachments  // Explicitly set attachments to null for user messages
     })
     .eq('id', messageId);

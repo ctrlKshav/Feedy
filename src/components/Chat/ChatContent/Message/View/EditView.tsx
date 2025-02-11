@@ -106,9 +106,11 @@ const EditView = ({
       updatedChats,
       currentChatIndex
     );
+
+    console.log(messageResponse)
     
     // const messageId = messageResponse.data?.id
-    const messageId = ""
+    const messageId = messageResponse.data && messageResponse.data[0].id
 
     const updatedMessages = updatedChats[currentChatIndex].messages;
 
