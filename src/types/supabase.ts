@@ -6,7 +6,7 @@ export interface SupabaseThread {
     admin_id: string;
     title: string;
     created_at: EpochTimeStamp;
-    updated_at?: EpochTimeStamp
+    updated_at: EpochTimeStamp
     messages: ThreadMessage[];
 }
 

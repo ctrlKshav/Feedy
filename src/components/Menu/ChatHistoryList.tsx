@@ -190,7 +190,6 @@ const ChatHistoryList = (props: { loading: boolean }) => {
         </div>
       )}
 
-      <div className='w-full h-10' />
     </div>
   );
 };

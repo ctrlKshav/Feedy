@@ -136,6 +136,9 @@
   a.link {
     @apply underline dark:hover:text-white hover:text-black;
   }
+  :root {
+    --radius: 0.5rem;
+  }
 }
 
 @layer components {
