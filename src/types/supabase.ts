@@ -1,4 +1,4 @@
-﻿import { Role } from "./chat";
+﻿import { Attachment, Role } from "./chat";
 
 export interface SupabaseThread {
     id: string;
@@ -16,7 +16,7 @@ export interface ThreadMessage {
     user_id: string;
     admin_id: string;
     content: string;
-    uploaded_content_url?: string;
+    attachments: Attachment[];
     role: Role;
     created_at : EpochTimeStamp
     updated_at? : EpochTimeStamp

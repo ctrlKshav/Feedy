@@ -4,7 +4,7 @@ import useStore from '@store/store';
 import { useTranslation } from 'react-i18next';
 import { Attachment, ChatInterface } from '@type/chat';
 import { getImageAnalysis } from '@api/api';
-import { saveConversationToSupabase } from '@utils/supabaseOperations';
+import { saveConversationToSupabase, updateUserAttachments } from '@utils/supabaseOperations';
 import { useAuth } from '@src/context/UserAuthProvider';
 
 const useSubmit = () => {
@@ -20,7 +20,7 @@ const useSubmit = () => {
 
 
 
-  const handleSubmit = async (images: File[], question: string) => {
+  const handleSubmit = async (messageId: string, images: File[], question: string) => {
     if (generating) return;
     setGenerating(true);
 
@@ -37,11 +37,10 @@ const useSubmit = () => {
 
       const attachments = analyses.map((analysis) => {
         
+        const cleanResponse = analysis.response.replace(/```/g, '').trim();
         
-        let tempResponse = `\n ${analysis.image_name} : \n
-        ${analysis.response} \n`
-        netResponse = netResponse + tempResponse
-        console.log(netResponse, tempResponse)
+        netResponse += `\n**Image: ${analysis.image_name}**\n${cleanResponse}\n`;
+
         
         return {
           url: analysis.image_url,
@@ -51,7 +50,6 @@ const useSubmit = () => {
 
       })
 
-
         // Add assistant's response
       updatedChats[currentChatIndex].messages.push({
         role: 'assistant',
@@ -59,19 +57,18 @@ const useSubmit = () => {
         attachments: attachments,
       });
 
+      // const updateResponse = updateUserAttachments(messageId, attachments);
 
-        // const supabaseResponse = saveConversationToSupabase(
-        //   user,
-        //   adminId,
-        //   analysis.response,
-        //   images,
-        //   "assistant",
-        //   updatedChats,
-        //   currentChatIndex
-        // );    
+      // const supabaseResponse = saveConversationToSupabase(
+      //   user,
+      //   adminId,
+      //   netResponse,
+      //   "assistant",
+      //   updatedChats,
+      //   currentChatIndex,
+      //   attachments,
+      // );    
       
-
-        
       setChats(updatedChats);
     } catch (e: unknown) {
       const err = (e as Error).message;

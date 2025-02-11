@@ -1,10 +1,10 @@
 ﻿import { SupabaseThread } from "@type/supabase";
 import { User } from "@supabase/supabase-js";
 import supabase from "./supabase";
-import { ChatInterface } from "@type/chat";
+import { Attachment, ChatInterface } from "@type/chat";
 
-export const saveConversationToSupabase = async (user:User | null,adminId: string | null, content : string, attachments : File[] 
-  , inputRole: string, updatedChats: ChatInterface[], currentChatIndex: number
+export const saveConversationToSupabase = async (user:User | null,adminId: string | null, content : string, 
+   inputRole: string, updatedChats: ChatInterface[], currentChatIndex: number, attachments?: Attachment[]
 ) => {
 
   if(user?.role === "user"){
@@ -23,6 +23,7 @@ export const saveConversationToSupabase = async (user:User | null,adminId: strin
       thread_id: updatedChats[currentChatIndex].id,
       role: inputRole,
       content: content,
+      attachments: attachments ? attachments : null,
     })
 
     return { threadResponse, messageResponse };
@@ -69,6 +70,7 @@ export const fetchConversationsFromSupabase = async (
         id,
         role,
         content,
+        attachments,
         created_at,
         user_id,
         admin_id,
@@ -83,4 +85,17 @@ export const fetchConversationsFromSupabase = async (
       : await query.eq("user_id", user.id);
 
   return { threadsData: threadsData as SupabaseThread[] | null, threadsError };
+};
+
+export const updateUserAttachments = async (
+  messageId: string,
+  attachments: Attachment[]
+) => {
+  
+  return await supabase
+    .from('messages')
+    .upsert({
+      attachments: attachments  // Explicitly set attachments to null for user messages
+    })
+    .eq('id', messageId);
 };

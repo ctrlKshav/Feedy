@@ -96,15 +96,19 @@ const EditView = ({
       JSON.stringify(useStore.getState().chats)
     );
 
-    const supabaseResponse = saveConversationToSupabase(
+
+    
+    const {threadResponse, messageResponse} = await saveConversationToSupabase(
       user,
       adminId,
       _content,
-      attachments,
       inputRole,
       updatedChats,
       currentChatIndex
     );
+    
+    // const messageId = messageResponse.data?.id
+    const messageId = ""
 
     const updatedMessages = updatedChats[currentChatIndex].messages;
 
@@ -139,7 +143,7 @@ const EditView = ({
       setIsEdit(false);
     }
     setChats(updatedChats);
-    handleSubmit(attachments, _content);
+    handleSubmit(messageId, attachments, _content);
   };
 
   useEffect(() => {

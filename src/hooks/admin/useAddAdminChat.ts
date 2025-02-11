@@ -3,7 +3,7 @@ import useStore from '@store/store';
 import { generateDefaultAdminChat } from '@constants/chat';
 import { ChatInterface } from '@type/chat';
 import useInitialiseNewAdminChat from './useInitialiseNewAdminChat';
-import { SupabaseThread } from '@type/supabase';
+import { SupabaseThread, ThreadMessage } from '@type/supabase';
 
 const useAddAdminChat = () => {
   const setChats = useStore((state) => state.setChats);
@@ -18,10 +18,11 @@ const useAddAdminChat = () => {
       if(chats){
         const obj = generateDefaultAdminChat(thread.id, thread.title, folder)
         const sortedMessages = thread.messages.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-        sortedMessages.forEach((message : any) => {
+        sortedMessages.forEach((message : ThreadMessage) => {
           obj.messages.push({
             role: message.role,
             content: message.content,
+            attachments: message.attachments
           });
         })
         chats.unshift(obj);
