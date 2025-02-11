@@ -95,7 +95,7 @@ const ChatHistoryList = (props: { loading: boolean }) => {
         foldersRef.current = state.folders;
       }
     });
-  }, []);
+  }, [props.loading]);
 
   useEffect(() => {
     if (
