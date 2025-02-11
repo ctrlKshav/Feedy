@@ -47,6 +47,7 @@ export const saveConversationToSupabase = async (user:User | null,adminId: strin
       thread_id: updatedChats[currentChatIndex].id,
       role: inputRole,
       content: content,
+      attachments: attachments ? attachments : null,
     })
     .select('id')
 

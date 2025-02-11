@@ -14,15 +14,6 @@ import { saveConversationToSupabase } from '@utils/supabaseOperations';
 import { authLoader, fetchUserId } from '@utils/auth';
 import { useAuth } from '@src/context/UserAuthProvider';
 
-const loader = async () => {
-  const { authData, authError } = await authLoader(
-    'user@gmail.com',
-    'realuser'
-  );
-  const { fetchedData, fetchError } = await fetchUserId('admin@gmail.com');
-  return { authData, fetchedData };
-};
-
 const EditView = ({
   content,
   setIsEdit,

@@ -111,7 +111,7 @@ const ContentViewAdmin = memo(
             </ReactMarkdown>
             <div className=' flex flex-wrap gap-4 items-center '>
               {attachments && attachments.length > 0 && (
-                <div className=' flex flex-wrap order-2'>
+                <div className=' flex flex-wrap order-2 gap-4 '>
                   {attachments.map((attachment: Attachment, index: number) => (
                     <a
                       key={index}

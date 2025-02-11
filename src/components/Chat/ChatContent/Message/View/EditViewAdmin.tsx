@@ -5,18 +5,14 @@ import useStore from '@store/store';
 import { Attachment, ChatInterface, Role } from '@type/chat';
 
 import PopupModal from '@components/PopupModal';
-import { Send, Paperclip } from 'lucide-react';
+import { Send, Paperclip, CloudLightning } from 'lucide-react';
 import StopGeneratingButton from '@components/StopGeneratingButton/StopGeneratingButton';
 
 import { saveConversationToSupabase } from '@utils/supabaseOperations';
 import { authLoader, fetchUserId } from '@utils/auth';
 import { useAuth } from '@src/context/AdminAuthProvider';
-
-const loader = async () => {
-  const {authData, authError} = await authLoader("user@gmail.com", "realuser");
-  const {fetchedData, fetchError} = await fetchUserId("admin@gmail.com");
-  return { authData, fetchedData };
-};
+import { uploadImages } from '@api/api';
+import useSubmitAdmin from '@hooks/useSubmitAdmin';
 
 const EditViewAdmin = ({
   content,
@@ -43,6 +39,7 @@ const EditViewAdmin = ({
   const [attachments, setAttachments] = useState<File[]>([]);
 
   const generating = useStore((state) => state.generating);
+  const {handleSubmit} = useSubmitAdmin();
 
   const { t } = useTranslation();
   const {user, adminId} = useAuth();
@@ -90,16 +87,17 @@ const EditViewAdmin = ({
     const updatedChats: ChatInterface[] = JSON.parse(
       JSON.stringify(useStore.getState().chats)
     );
+
     if(user?.role === "admin")
       setInputRole('admin')
-      
+
     const {messageResponse} = await  saveConversationToSupabase(user,adminId, _content,
-      "admin", updatedChats, currentChatIndex
-  )
-    const messsageId = messageResponse.data && messageResponse.data[0].id
-    
+      "admin", updatedChats, currentChatIndex)
+
+    const messageId = messageResponse.data && messageResponse.data[0].id
+
     const updatedMessages = updatedChats[currentChatIndex].messages;
-    
+
     if (sticky) {
       if (_content !== '' || attachments.length > 0) {
         updatedMessages.push({
@@ -131,7 +129,7 @@ const EditViewAdmin = ({
       setIsEdit(false);
     }
     setChats(updatedChats);
-
+    handleSubmit(messageId, attachments, content)
   };
 
   useEffect(() => {

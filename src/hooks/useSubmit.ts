@@ -30,11 +30,9 @@ const useSubmit = () => {
       if (uploadResponse.status !== 'success') {
         throw new Error('Failed to upload images');
       }
-      console.log(uploadResponse)
 
       // Then get the analysis using the uploaded image URLs
       const analyses = await getImageAnalysis(uploadResponse.images, question);
-      console.log(analyses)
       
       // Update the chat with the assistant's response
       const updatedChats: ChatInterface[] = JSON.parse(
