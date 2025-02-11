@@ -3,7 +3,7 @@ import React from 'react';
 import useStore from '@store/store';
 import { useTranslation } from 'react-i18next';
 import { Attachment, ChatInterface } from '@type/chat';
-import { getImageAnalysis } from '@api/api';
+import { uploadImages, getImageAnalysis } from '@api/api';
 import { saveConversationToSupabase, updateUserAttachments } from '@utils/supabaseOperations';
 import { useAuth } from '@src/context/UserAuthProvider';
 
@@ -25,8 +25,16 @@ const useSubmit = () => {
     setGenerating(true);
 
     try {
-      // Get the analysis from the backend
-      const analyses = await getImageAnalysis(images, question);
+      
+      const uploadResponse = await uploadImages(images);
+      if (uploadResponse.status !== 'success') {
+        throw new Error('Failed to upload images');
+      }
+      console.log(uploadResponse)
+
+      // Then get the analysis using the uploaded image URLs
+      const analyses = await getImageAnalysis(uploadResponse.images, question);
+      console.log(analyses)
       
       // Update the chat with the assistant's response
       const updatedChats: ChatInterface[] = JSON.parse(

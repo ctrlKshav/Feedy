@@ -1,6 +1,6 @@
-// api.ts
 import { ShareGPTSubmitBodyInterface } from "@type/api";
 import { Attachment } from "@type/chat";
+
 export interface AnalysisResponse {
   response: string;
   status: string;
@@ -8,31 +8,52 @@ export interface AnalysisResponse {
   image_name: string;
 }
 
+export interface UploadResponse {
+  images: {
+    image_url: string;
+    image_name: string;
+  }[];
+  status: string;
+}
 
-export const getImageAnalysis = async (
-  images: File[],
-  question: string
-): Promise<AnalysisResponse[]> => {
+export const uploadImages = async (images: File[]): Promise<UploadResponse> => {
   const formData = new FormData();
-  formData.append('question', question);
   images.forEach(image => formData.append('images', image));
-  const response = await fetch('http://localhost:8000/analyze-image', {
+  
+  const response = await fetch('http://localhost:8000/upload-images', {
     method: 'POST',
     body: formData,
   });
-
-  // const response = await fetch('https://backend-sparkling-flower-4578.fly.dev/analyze-image', {
-  //   method: 'POST',
-  //   body: formData,
-  // });
 
   if (!response.ok) {
     const errorText = await response.text();
     throw new Error(errorText);
   }
 
-  const data = await response.json();
-  return data;
+  return await response.json();
+};
+
+export const getImageAnalysis = async (
+  imageUrls: { image_url: string; image_name: string }[],
+  question: string
+): Promise<AnalysisResponse[]> => {
+  const response = await fetch('http://localhost:8000/analyze-images', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      image_urls: imageUrls,
+      question
+    })
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
+  }
+
+  return await response.json();
 };
 
 export const submitShareGPT = async (body: ShareGPTSubmitBodyInterface) => {
