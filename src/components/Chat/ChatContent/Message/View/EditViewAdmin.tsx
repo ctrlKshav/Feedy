@@ -93,10 +93,10 @@ const EditViewAdmin = ({
     if(user?.role === "admin")
       setInputRole('admin')
       
-    const supabaseResponse = saveConversationToSupabase(user,adminId, _content, attachments ,
+    const {messageResponse} = await  saveConversationToSupabase(user,adminId, _content,
       "admin", updatedChats, currentChatIndex
   )
-    
+    const messsageId = messageResponse.data && messageResponse.data[0].id
     
     const updatedMessages = updatedChats[currentChatIndex].messages;
     
@@ -131,6 +131,7 @@ const EditViewAdmin = ({
       setIsEdit(false);
     }
     setChats(updatedChats);
+
   };
 
   useEffect(() => {

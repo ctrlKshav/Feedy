@@ -98,7 +98,7 @@ const EditView = ({
 
 
     
-    const {threadResponse, messageResponse} = await saveConversationToSupabase(
+    const {messageResponse} = await saveConversationToSupabase(
       user,
       adminId,
       _content,
@@ -107,9 +107,7 @@ const EditView = ({
       currentChatIndex
     );
 
-    console.log(messageResponse)
     
-    // const messageId = messageResponse.data?.id
     const messageId = messageResponse.data && messageResponse.data[0].id
 
     const updatedMessages = updatedChats[currentChatIndex].messages;

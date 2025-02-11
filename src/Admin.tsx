@@ -44,21 +44,15 @@ function AdminChild() {
       setLoading(true)
       const { threadsData, threadsError } = await fetchConversationsFromSupabase(user, adminId);
   
-      threadsData?.forEach((thread, index) => {
+      threadsData?.forEach(async (thread) => {
         // If `some` returns true, it means a match is found, and `addAdminChat` won't be called.
         const exists = chats?.some((chat) => {
           return chat.id === thread.id; // Exits early if condition is met
         });
   
         if (exists == undefined || !exists) {
-          addAdminChat(thread);
-          thread.messages.forEach((message) => {
-            chats && chats[index].messages.push({
-              role: message.role,
-              content: message.content,
-            });
-          })
-         
+          await addAdminChat(thread);
+          
         }
       });
       setLoading(false)
