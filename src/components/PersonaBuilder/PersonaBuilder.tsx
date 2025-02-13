@@ -1,11 +1,10 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { ChevronRight, ChevronLeft, Save, Check, Sparkles, Wand2, ArrowLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Save, Check, Sparkles, Wand2 } from 'lucide-react';
 import { PersonaBuilderProps, PersonaPreferences } from './types';
 import { DesignPreferences } from './Steps/DesignPreferences';
 import { ColorPreferences } from './Steps/ColorPreferences';
 import { ImagePreferences } from './Steps/ImagePreferences';
 import { TonePersonality } from './Steps/TonePersonality';
-import { Navigate, useNavigate } from 'react-router';
 
 const defaultPreferences: PersonaPreferences = {
   design: [],
@@ -24,7 +23,6 @@ export function PersonaBuilder({ initialData = {}, onComplete }: PersonaBuilderP
   const [saved, setSaved] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  let navigate = useNavigate()
 
   const steps = [
     {
@@ -71,24 +69,13 @@ export function PersonaBuilder({ initialData = {}, onComplete }: PersonaBuilderP
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const onBack = () => {
-    navigate("/admin")
-  }
-
+  
   const CurrentStepComponent = steps[currentStep].component;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-8rem)]">
 
-    <div className="col-span-2 mb-4">
-      <button
-        onClick={onBack}
-        className="inline-flex items-center px-4 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200"
-      >
-        <ArrowLeft className="w-4 h-4 mr-2" />
-        Go Back
-      </button>
-    </div>
+    
 
       {/* Form Column */}
       <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
