@@ -11,11 +11,11 @@ import GoogleSync from '@components/GoogleSync';
 import { TotalTokenCostDisplay } from '@components/SettingsMenu/TotalTokenCost';
 import {t} from 'i18next';
 import { UserIcon } from 'lucide-react';
-import PersonaBuilderLink from '@components/Chat/ChatContent/Persona/PersonaBuilderLink';
+import PersonaBuilderLink from '@components/PersonaBuilder/PersonaBuilderLink';
 
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || undefined;
 
-const MenuOptions = () => {
+const MenuOptions = (props: {role: string}) => {
   const countTotalTokens = useStore((state) => state.countTotalTokens);
   return (
     <>
@@ -23,7 +23,9 @@ const MenuOptions = () => {
         className={`'max-h-full
         overflow-hidden transition-all`}
       >
+        {props.role === "admin" &&
         <PersonaBuilderLink />
+      }
 
         {/* {countTotalTokens && <TotalTokenCostDisplay />} */}
         {/* {googleClientId && <GoogleSync clientId={googleClientId} />} */}

@@ -47,7 +47,7 @@ const Menu = (props: {loading: boolean}) => {
              
                 <>
                   <ChatHistoryList loading={props.loading}/>
-                  <MenuOptions />
+                  <MenuOptions role={"user"} />
                 </>
               
             </nav>

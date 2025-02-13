@@ -44,7 +44,7 @@ const MenuAdmin = (props: {loading: boolean}) => {
               <>
                 <ChatHistoryList  loading={props.loading} />
 
-                <MenuOptions />
+                <MenuOptions role={"admin"} />
               </>
             </nav>
           </div>

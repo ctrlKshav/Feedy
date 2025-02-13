@@ -1,10 +1,11 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { ChevronRight, ChevronLeft, Save, Check, Sparkles, Wand2 } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Save, Check, Sparkles, Wand2, ArrowLeft } from 'lucide-react';
 import { PersonaBuilderProps, PersonaPreferences } from './types';
 import { DesignPreferences } from './Steps/DesignPreferences';
 import { ColorPreferences } from './Steps/ColorPreferences';
 import { ImagePreferences } from './Steps/ImagePreferences';
 import { TonePersonality } from './Steps/TonePersonality';
+import { Navigate, useNavigate } from 'react-router';
 
 const defaultPreferences: PersonaPreferences = {
   design: [],
@@ -22,6 +23,8 @@ export function PersonaBuilder({ initialData = {}, onComplete }: PersonaBuilderP
   });
   const [saved, setSaved] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+
+  let navigate = useNavigate()
 
   const steps = [
     {
@@ -68,10 +71,25 @@ export function PersonaBuilder({ initialData = {}, onComplete }: PersonaBuilderP
     setTimeout(() => setSaved(false), 2000);
   };
 
+  const onBack = () => {
+    navigate("/admin")
+  }
+
   const CurrentStepComponent = steps[currentStep].component;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-8rem)]">
+
+    <div className="col-span-2 mb-4">
+      <button
+        onClick={onBack}
+        className="inline-flex items-center px-4 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200"
+      >
+        <ArrowLeft className="w-4 h-4 mr-2" />
+        Go Back
+      </button>
+    </div>
+
       {/* Form Column */}
       <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
         {/* Fixed Header */}
@@ -161,27 +179,36 @@ export function PersonaBuilder({ initialData = {}, onComplete }: PersonaBuilderP
       {/* Preview Column */}
       <div className="flex flex-col bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-white">
-          <div className="flex items-center space-x-3">
-            <Wand2 className="w-6 h-6 text-[#4A90E2]" />
-            <h3 className="text-xl font-semibold text-gray-900">Persona Preview</h3>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Wand2 className="w-6 h-6 text-[#4A90E2]" />
+              <h3 className="text-xl font-semibold text-gray-900">Persona Preview</h3>
+            </div>
+            <div className="flex items-center text-sm text-gray-500">
+              <Sparkles className="w-4 h-4 mr-2 text-[#4A90E2]" />
+              <span>Live Preview</span>
+            </div>
           </div>
         </div>
         
-        <div className="flex-1 p-6 overflow-y-auto">
-          <div className="relative bg-white rounded-lg p-6 shadow-sm border border-gray-100 h-full">
+        <div className="flex-1 p-6 bg-gradient-to-br from-gray-50 to-white">
+          <div className="relative bg-white rounded-lg p-6 shadow-sm border border-gray-100 h-full flex flex-col">
             {isUpdating && (
               <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center rounded-lg">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#4A90E2]"></div>
               </div>
             )}
-            <p className="text-gray-600 leading-relaxed">{generatePrompt()}</p>
+            <div className="flex-1">
+              <h4 className="text-lg font-medium text-gray-900 mb-4">Generated Prompt</h4>
+              <p className="text-gray-600 leading-relaxed">{generatePrompt()}</p>
+            </div>
           </div>
         </div>
 
         <div className="p-6 border-t bg-gradient-to-r from-blue-50 to-white">
           <div className="flex items-center text-sm text-gray-500">
             <Sparkles className="w-4 h-4 mr-2 text-[#4A90E2]" />
-            <span>Add custom notes to make your persona more distinctive and relevant to your taste</span>
+            <span>Add custom notes in the form to make your persona more distinctive</span>
           </div>
         </div>
       </div>
