@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { UserIcon } from 'lucide-react';
 
 import PopupModal from '@components/PopupModal';
+import { Link } from 'react-router';
 
 const PersonaBuilderLink = () => {
   const { t } = useTranslation();
@@ -10,14 +11,12 @@ const PersonaBuilderLink = () => {
 
   return (
     <>
-      <a
+    <Link to={"/admin/manage-persona"}
         className='flex py-2 px-2 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm'
-        href='/admin/manage-persona'
-      >
+        >
         <UserIcon className='w-4 h-4' /> {t('Manage Persona') as string}
-
-      </a>
-
+    </Link>
+     
     </>
   );
 };
