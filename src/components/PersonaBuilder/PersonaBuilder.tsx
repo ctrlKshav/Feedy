@@ -181,7 +181,7 @@ export function PersonaBuilder({ initialData = {}, onComplete }: PersonaBuilderP
         <div className="p-6 border-t bg-gradient-to-r from-blue-50 to-white">
           <div className="flex items-center text-sm text-gray-500">
             <Sparkles className="w-4 h-4 mr-2 text-[#4A90E2]" />
-            <span>Updates in real-time as you make changes</span>
+            <span>Add custom notes to make your persona more distinctive and relevant to your taste</span>
           </div>
         </div>
       </div>
