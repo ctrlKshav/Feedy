@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { ChevronRight, ChevronLeft, Save, Check, Sparkles, Wand2 } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Save, Check, Sparkles, Wand2, Copy, RefreshCw } from 'lucide-react';
 import { PersonaBuilderProps, PersonaPreferences } from './types';
 import { DesignPreferences } from './Steps/DesignPreferences';
 import { ColorPreferences } from './Steps/ColorPreferences';
@@ -24,7 +24,8 @@ export function PersonaBuilder({ initialData = {}, onComplete }: PersonaBuilderP
   });
   const [saved, setSaved] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-
+  const [editablePrompt, setEditablePrompt] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const steps = [
     {
@@ -63,28 +64,35 @@ export function PersonaBuilder({ initialData = {}, onComplete }: PersonaBuilderP
     return `You are a ${toneDescription} assistant with a ${preferences.design.join(', ').toLowerCase()} design style and a ${preferences.colors.toLowerCase()} color scheme. Your visual aesthetic is inspired by ${preferences.imagePreference === 'minimal' ? 'minimal and clean' : 'vibrant and bold'} design principles. ${preferences.customNotes}`;
   };
 
+  useEffect(() => {
+    setEditablePrompt(generatePrompt());
+  }, [preferences]);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(editablePrompt);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleRegenerate = () => {
+    setEditablePrompt(generatePrompt());
+  };
+
   const handleSave = async () => {
-    const prompt = generatePrompt();
-    await navigator.clipboard.writeText(prompt);
-    onComplete(prompt);
+    await navigator.clipboard.writeText(editablePrompt);
+    onComplete(editablePrompt);
     setSaved(true);
 
-    const response = await refinePersona(prompt)
+    const response = await refinePersona(editablePrompt)
     const supaResponse = await updateAdminPersona("28851c19-5a52-431a-a430-cea1136ce896", response.refined_prompt)
-
-    
     
     setTimeout(() => setSaved(false), 2000);
   };
 
-  
   const CurrentStepComponent = steps[currentStep].component;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-8rem)]">
-
-    
-
       {/* Form Column */}
       <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
         {/* Fixed Header */}
@@ -179,14 +187,35 @@ export function PersonaBuilder({ initialData = {}, onComplete }: PersonaBuilderP
               <Wand2 className="w-6 h-6 text-[#4A90E2]" />
               <h3 className="text-xl font-semibold text-gray-900">Persona Preview</h3>
             </div>
-            <div className="flex items-center text-sm text-gray-500">
-              <Sparkles className="w-4 h-4 mr-2 text-[#4A90E2]" />
-              <span>Live Preview</span>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={handleRegenerate}
+                className="flex items-center text-sm text-gray-500 hover:text-[#4A90E2] transition-colors"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                <span>Regenerate</span>
+              </button>
+              <button
+                onClick={handleCopy}
+                className="flex items-center text-sm text-gray-500 hover:text-[#4A90E2] transition-colors"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4 mr-2" />
+                    <span>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4 mr-2" />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>
         
-        <div className="flex-1 p-6 bg-gradient-to-br from-gray-50 to-white">
+        <div className="flex-1 p-6 bg-gray-100">
           <div className="relative bg-white rounded-lg p-6 shadow-sm border border-gray-100 h-full flex flex-col">
             {isUpdating && (
               <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex items-center justify-center rounded-lg">
@@ -195,7 +224,11 @@ export function PersonaBuilder({ initialData = {}, onComplete }: PersonaBuilderP
             )}
             <div className="flex-1">
               <h4 className="text-lg font-medium text-gray-900 mb-4">Generated Prompt</h4>
-              <p className="text-gray-600 leading-relaxed">{generatePrompt()}</p>
+              <textarea
+                value={editablePrompt}
+                onChange={(e) => setEditablePrompt(e.target.value)}
+                className="w-full h-1/2 p-2  text-gray-600 leading-relaxed resize-none border border-black rounded-lg focus:outline-none focus:border-2 focus:border-[#4A90E2]"
+              />
             </div>
           </div>
         </div>
@@ -203,7 +236,7 @@ export function PersonaBuilder({ initialData = {}, onComplete }: PersonaBuilderP
         <div className="p-6 border-t bg-gradient-to-r from-blue-50 to-white">
           <div className="flex items-center text-sm text-gray-500">
             <Sparkles className="w-4 h-4 mr-2 text-[#4A90E2]" />
-            <span>Add custom notes in the form to make your persona more distinctive</span>
+            <span>Edit the prompt directly or use the form to update it automatically</span>
           </div>
         </div>
       </div>
