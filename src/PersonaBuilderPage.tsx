@@ -6,7 +6,6 @@ import { Link } from 'react-router';
 function PersonnaBuilderPage() {
   
   const handleComplete = (prompt: string) => {
-    console.log('Final Persona Prompt:', prompt);
   };
   
 

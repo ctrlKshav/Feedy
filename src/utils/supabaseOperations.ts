@@ -105,3 +105,15 @@ export const updateUserAttachments = async (
     })
     .eq('id', messageId);
 };
+
+export const updateAdminPersona = async (
+  adminId: string,
+  updatedPersona: string
+) => {
+  return await supabase
+    .from('profiles')
+    .update({
+      persona: updatedPersona
+    })
+    .eq('id', adminId)
+}

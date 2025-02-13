@@ -5,6 +5,8 @@ import { DesignPreferences } from './Steps/DesignPreferences';
 import { ColorPreferences } from './Steps/ColorPreferences';
 import { ImagePreferences } from './Steps/ImagePreferences';
 import { TonePersonality } from './Steps/TonePersonality';
+import { refinePersona } from '@api/api';
+import { updateAdminPersona } from '@utils/supabaseOperations';
 
 const defaultPreferences: PersonaPreferences = {
   design: [],
@@ -66,6 +68,12 @@ export function PersonaBuilder({ initialData = {}, onComplete }: PersonaBuilderP
     await navigator.clipboard.writeText(prompt);
     onComplete(prompt);
     setSaved(true);
+
+    const response = await refinePersona(prompt)
+    const supaResponse = await updateAdminPersona("28851c19-5a52-431a-a430-cea1136ce896", response.refined_prompt)
+
+    
+    
     setTimeout(() => setSaved(false), 2000);
   };
 

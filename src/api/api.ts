@@ -16,6 +16,11 @@ export interface UploadResponse {
   status: string;
 }
 
+export interface PersonaResponse {
+  refined_prompt: string;
+  status: string;
+}
+
 export const uploadImages = async (images: File[]): Promise<UploadResponse> => {
   const formData = new FormData();
   images.forEach(image => formData.append('images', image));
@@ -35,7 +40,8 @@ export const uploadImages = async (images: File[]): Promise<UploadResponse> => {
 
 export const getImageAnalysis = async (
   imageUrls: { image_url: string; image_name: string }[],
-  question: string
+  question: string,
+  admin_persona: string,
 ): Promise<AnalysisResponse[]> => {
   const response = await fetch('http://localhost:8000/analyze-images', {
     method: 'POST',
@@ -44,8 +50,26 @@ export const getImageAnalysis = async (
     },
     body: JSON.stringify({
       image_urls: imageUrls,
-      question
+      question,
+      admin_persona: admin_persona,
     })
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText);
+  }
+
+  return await response.json();
+};
+
+export const refinePersona = async (initialPrompt: string): Promise<PersonaResponse> => {
+  const response = await fetch('http://localhost:8000/refine-persona', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ initial_prompt: initialPrompt })
   });
 
   if (!response.ok) {

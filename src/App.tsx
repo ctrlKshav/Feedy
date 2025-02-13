@@ -45,8 +45,6 @@ function  AppChild() {
       const { threadsData, threadsError } = await fetchConversationsFromSupabase(user, adminId);
 
       const sortedThreads = threadsData?.sort((a, b) => b.updated_at - a.updated_at);
-      console.log(threadsData)
-      console.log(sortedThreads)
   
       sortedThreads?.forEach(async (thread) => {
         // If `some` returns true, it means a match is found, and `addAdminChat` won't be called.

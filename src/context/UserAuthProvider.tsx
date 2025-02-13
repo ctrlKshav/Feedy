@@ -9,6 +9,11 @@ import Skeleton from "@components/Skeleton";
 interface UserAuthContextType {
   user: User | null;
   adminId: string | null;
+  admin: Admin | null;
+}
+
+interface Admin extends User {
+  persona: string;
 }
 
 // Create context with an undefined default to ensure it's not used outside the provider
@@ -33,15 +38,17 @@ const UserAuthProvider = () => {
   const [user, setUser] = useState<User | null>(null);
   const [adminId, setAdminId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [admin, setAdmin] = useState<Admin | null>(null);
 
   useEffect(() => {
     const getUser = async () => {
       setLoading(true);
       const { data } = await login("user@gmail.com", "realuser");
       const { fetchedProfile: currentUser } = await fetchUserFromProfiles("user@gmail.com");
-      const { fetchedData } = await fetchUserId("admin@gmail.com");
+      const { fetchedProfile: fetchedData } = await fetchUserFromProfiles("admin@gmail.com");
 
       setUser(currentUser ?? null);
+      setAdmin(fetchedData ?? null)
       setAdminId(fetchedData?.id ?? null);
       setLoading(false);
     };
@@ -53,6 +60,7 @@ const UserAuthProvider = () => {
       value={{
         user,
         adminId,
+        admin,
       }}>
       {loading ? <Skeleton /> : <App />}
     </UserAuthContext.Provider>
