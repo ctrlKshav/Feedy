@@ -10,8 +10,6 @@ import { BrowserRouter, Routes, Route } from 'react-router';
 import UserAuthProvider from './context/UserAuthProvider';
 import AdminAuthProvider from './context/AdminAuthProvider';
 import Skeleton from '@components/Skeleton';
-import ManagePersona from '@components/Chat/ChatContent/Persona/PersonaBuilderLink';
-// import AuthProvider from './context/AuthProvider';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <>
@@ -19,7 +17,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <Routes>
           <Route path='/' element={<UserAuthProvider />} hydrateFallbackElement={<Skeleton />} />
           <Route path='/admin' element={<AdminAuthProvider  />} hydrateFallbackElement={<Skeleton />} />
-          <Route path='/admin/manage-persona' element={<ManagePersona />} hydrateFallbackElement={<Skeleton />} />
         </Routes>
     </BrowserRouter>
   </>
