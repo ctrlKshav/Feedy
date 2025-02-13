@@ -16,7 +16,7 @@ const useSubmit = () => {
   const setChats = useStore((state) => state.setChats);
   const inputRole = useStore((state) => state.inputRole);
   const currentChatIndex = useStore((state) => state.currentChatIndex);
-  const {user,adminId} = useAuth();
+  const {user,adminId, admin} = useAuth();
 
 
 
@@ -32,7 +32,7 @@ const useSubmit = () => {
       }
 
       // Then get the analysis using the uploaded image URLs
-      const analyses = await getImageAnalysis(uploadResponse.images, question);
+      const analyses = await getImageAnalysis(uploadResponse.images, question, admin?.persona ?? "");
       
       // Update the chat with the assistant's response
       const updatedChats: ChatInterface[] = JSON.parse(
