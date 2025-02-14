@@ -7,6 +7,7 @@ import useStore from "@store/store"; // <-- import the Zustand store
 
 interface AuthContextType {
   login: (email: string, password: string, adminEmail: string) => Promise<any>;
+  signUp: (email: string, password: string, adminEmail: string) => Promise<any>; // Add this line
   signOut: () => Promise<void>;
   user: Profile | null;
   loading: boolean;
@@ -73,6 +74,48 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const signUp = async (name: string, email: string, password: string) => {
+    console.log('reach')
+    setLoading(true);
+    try {
+      // Sign up the user with Supabase
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name
+          }
+        }
+      },
+    );
+      console.log(data)
+      
+      if (error) throw error;
+
+      if (data.user) {
+        // Fetch the automatically created profile
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', data.user.id)
+          .single();
+
+        if (profileError) throw profileError;
+
+        // Set the user state
+        setUser(profileData);
+
+        return profileData;
+      }
+    } catch (err) {
+      console.error("Signup error:", err);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -114,7 +157,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ login, signOut, user, loading, admin, adminId }}>
+    <AuthContext.Provider value={{ 
+      login, 
+      signUp, // Add this line
+      signOut, 
+      user, 
+      loading, 
+      admin, 
+      adminId 
+    }}>
       {loading ? <Skeleton /> : children}
     </AuthContext.Provider>
   );

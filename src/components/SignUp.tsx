@@ -2,36 +2,38 @@
 
 import type React from "react"
 import { useState } from "react"
-import { useNavigate } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useAuth } from "@src/context/AuthProvider"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
-import { Link } from "react-router"
 
-const LoginPage: React.FC = () => {
+const SignupPage: React.FC = () => {
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
-  const [adminEmail, setAdminEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [rememberMe, setRememberMe] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { signUp } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
     setLoading(true)
 
+    if (password !== confirmPassword) {
+      setError("Passwords do not match")
+      setLoading(false)
+      return
+    }
+
     try {
-      const authenticatedUser = await login(email, password, adminEmail)
-      if (authenticatedUser.role === "user") {
-        navigate("/")
-      } else {
-        navigate("/admin")
-      }
+      await signUp(name, email, password)
+      navigate("/")
     } catch (err) {
-      setError("Invalid email or password")
+      setError("Failed to create an account")
     } finally {
       setLoading(false)
     }
@@ -43,11 +45,16 @@ const LoginPage: React.FC = () => {
         <div className="text-center">
           <div className="mx-auto h-16 w-16 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center mb-4">
             <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+              />
             </svg>
           </div>
-          <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">Welcome Back</h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Sign in to your account to continue</p>
+          <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">Create an Account</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Sign up to get started</p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -59,8 +66,23 @@ const LoginPage: React.FC = () => {
 
           <div className="space-y-4">
             <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Full Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                required
+                className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 focus:z-10 sm:text-sm transition-all duration-300"
+                placeholder="Enter your full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Your Email
+                Email Address
               </label>
               <input
                 id="email"
@@ -100,22 +122,35 @@ const LoginPage: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="adminEmail" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Other party's email
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
+                Confirm Password
               </label>
-              <input
-                id="adminEmail"
-                type="email"
-                required
-                className="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 focus:z-10 sm:text-sm transition-all duration-300"
-                placeholder="Enter the email of the other person"
-                value={adminEmail}
-                onChange={(e) => setAdminEmail(e.target.value)}
-              />
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  required
+                  className="appearance-none rounded-lg relative block w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 focus:z-10 sm:text-sm transition-all duration-300"
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                </button>
+              </div>
             </div>
           </div>
 
-        
           <div>
             <button
               type="submit"
@@ -126,25 +161,26 @@ const LoginPage: React.FC = () => {
                   : "bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-blue-400"
               } transition-all duration-300 transform hover:scale-105`}
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? "Signing up..." : "Sign up"}
             </button>
           </div>
-          <div className="text-center">
+        </form>
+
+        <div className="text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <Link
-              to="/signup"
+              to="/login"
               className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
             >
-              Register
+              Sign in
             </Link>
           </p>
         </div>
-        </form>
       </div>
     </div>
   )
 }
 
-export default LoginPage
+export default SignupPage
 

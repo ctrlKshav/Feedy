@@ -6,8 +6,6 @@ import { Attachment, ChatInterface } from "@type/chat";
 export const saveConversationToSupabase = async (user:Profile | null,adminId: string | null, content : string, 
    inputRole: string, updatedChats: ChatInterface[], currentChatIndex: number, attachments?: Attachment[]
 ) => {
-  console.log('yah')
-  console.log(user)
 
   if(user?.role === "user"){
   const threadResponse = await supabase

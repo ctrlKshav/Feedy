@@ -12,6 +12,7 @@ import {
 import './main.css';
 import './i18n';
 import LoginPage from '@components/Login';
+import SignupPage from '@components/SignUp';
 
 await import('katex/dist/katex.min.css');
 
@@ -56,6 +57,13 @@ return (
 const AppRoutes = () => (
   <Routes>
     {/* Auth Routes */}
+    <Route path="/signup" element={
+      <AuthProvider>
+        <SignupPage />
+      </AuthProvider>
+
+    } />
+
     <Route path="/login" element={
       <AuthProvider>
         <LoginPage />

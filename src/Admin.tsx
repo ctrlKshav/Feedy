@@ -46,8 +46,6 @@ function AdminChild() {
     const func = async () => {
       setLoading(true)
       const { threadsData, threadsError } = await fetchConversationsFromSupabase(user, adminId);
-
-      console.log(threadsData)
       
       if(threadsData == undefined || threadsData.length < 1 || threadsError){
         initialiseNewChat();
