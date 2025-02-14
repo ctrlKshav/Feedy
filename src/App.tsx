@@ -21,13 +21,17 @@ import supabase from '@utils/supabase';
 import { fetchUserId } from '@utils/auth';
 import { useAuth } from './context/UserAuthProvider';
 import { Loader2 } from 'lucide-react';
+import updateChats from '@utils/updateChats';
 import Skeleton from '@components/Skeleton';
+import useUpdateChats from '@utils/updateChats';
 
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
 
 function  AppChild() {
+  
   const initialiseNewChat = useInitialiseNewChat();
+  const updateChats = useUpdateChats();
   const setChats = useStore((state) => state.setChats);
   const setTheme = useStore((state) => state.setTheme);
   const setApiKey = useStore((state) => state.setApiKey);
@@ -54,6 +58,11 @@ function  AppChild() {
         if (exists == undefined || !exists) {
           await addAdminChat(thread);
         }
+        else{
+            console.log("start")
+            console.log(thread)
+            const response = updateChats(thread);
+          }
       });
       setLoading(false)
     };

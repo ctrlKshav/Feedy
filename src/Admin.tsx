@@ -22,13 +22,16 @@ import { Loader2 } from 'lucide-react';
 import ChatAdmin from '@components/Chat/ChatAdmin';
 import Skeleton from '@components/Skeleton';
 import MenuAdmin from '@components/Menu/MenuAdmin';
+import useUpdateChats from '@utils/updateChats';
 
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
 
 function AdminChild() {
+
   const initialiseNewChat = useInitialiseNewAdminChat();
   const addAdminChat = useAddAdminChat();
+  const updateChats = useUpdateChats();
   const setChats = useStore((state) => state.setChats);
   const setTheme = useStore((state) => state.setTheme);
   const setApiKey = useStore((state) => state.setApiKey);
@@ -51,15 +54,19 @@ function AdminChild() {
         });
   
         if (exists == undefined || !exists) {
-          await addAdminChat(thread);
-          
+          await addAdminChat(thread); 
+        }
+        else{
+          console.log("start")
+          console.log(thread)
+          const response = updateChats(thread);
         }
       });
       setLoading(false)
     };
   
     if (user) func();
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = i18n.language;
@@ -80,7 +87,7 @@ function AdminChild() {
       setApiKey(apiKey);
       localStorage.removeItem('apiKey');
     }
-
+ 
     if (theme) {
       // legacy local storage
       setTheme(theme as Theme);
