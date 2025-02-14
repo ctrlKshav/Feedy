@@ -40,7 +40,7 @@ function  AppChild() {
   const addAdminChat = useAddAdminChat();
   const chats = useStore.getState().chats;
   const currentChatIndex = useStore.getState().currentChatIndex;
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const {user, adminId} = useAuth();
   
@@ -105,7 +105,7 @@ function  AppChild() {
   return (
     <div className='overflow-hidden w-full h-full relative '>
       <Menu loading={loading} />
-      <Chat />
+      <Chat loading={loading} />
       {/* <ApiPopup /> */}
       <Toast />
     </div>

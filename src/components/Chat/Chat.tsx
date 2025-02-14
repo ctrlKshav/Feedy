@@ -5,7 +5,7 @@ import ChatContent from './ChatContent';
 import MobileBar from '../MobileBar';
 import StopGeneratingButton from '@components/StopGeneratingButton/StopGeneratingButton';
 
-const Chat = () => {
+const Chat = (props: {loading: boolean}) => {
   const hideSideMenu = useStore((state) => state.hideSideMenu);
 
   return (
@@ -16,7 +16,7 @@ const Chat = () => {
     >
       <MobileBar />
       <main className='relative h-full w-full transition-width flex flex-col overflow-hidden items-stretch flex-1 min-h-screen'>
-        <ChatContent />
+        <ChatContent loading={props.loading} />
       </main>
     </div>
   );

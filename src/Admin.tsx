@@ -39,7 +39,7 @@ function AdminChild() {
   const chats = useStore.getState().chats;
   const currentChatIndex = useStore.getState().currentChatIndex;
   const {user, adminId} = useAuth();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   
 
   useEffect(() => {
@@ -104,13 +104,20 @@ function AdminChild() {
 
 
   return (
-    <div className='overflow-hidden w-full h-full relative'>
+    <>
+    {loading ? (
+      <Skeleton />
+    ) : (
+      <div className='overflow-hidden w-full h-full relative'>
       <MenuAdmin loading={loading} />
-      <Chat />
+      <Chat loading={loading} />
       {/* <ApiPopup /> */}
       <Toast />
     </div>
-  );
+  )
+}
+</>
+  )
 }
 
 function Admin() {

@@ -9,7 +9,7 @@ import { ExamplePromptsComponent } from '@components/ExamplePrompts';
 import { useAuth } from '@src/context/AuthProvider';
 import Skeleton from '@components/Skeleton';
 
-const ChatContent = () => {
+const ChatContent = (props: {loading: boolean}) => {
   const inputRole = useStore((state) => state.inputRole);
   const setError = useStore((state) => state.setError);
   const messages = useStore((state) =>
@@ -48,6 +48,8 @@ const ChatContent = () => {
   }, [generating, inputMessage]);
 
   const { error } = useSubmit();
+  if(props.loading)
+    return <Skeleton />;
 
   return (
     <div className='flex-1 flex flex-col h-full relative'>
