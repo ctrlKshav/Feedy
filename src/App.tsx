@@ -47,8 +47,16 @@ function  AppChild() {
     const func = async () => {
       setLoading(true)
       const { threadsData, threadsError } = await fetchConversationsFromSupabase(user, adminId);
+
+      console.log(threadsData)
+      if(threadsData == undefined || threadsData.length < 1 || threadsError){
+        console.log('hello')
+        initialiseNewChat();
+        setLoading(false)
+        return;
+      }
   
-      threadsData?.forEach(async (thread) => {
+      threadsData.forEach(async (thread) => {
         // If `some` returns true, it means a match is found, and `addAdminChat` won't be called.
         const exists = chats?.some((chat) => {
           return chat.id === thread.id; // Exits early if condition is met

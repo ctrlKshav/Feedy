@@ -1,9 +1,10 @@
-﻿import React, { useEffect, useRef } from 'react';
+﻿import React, { useEffect, useRef, useState } from 'react';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import useStore from '@store/store';
 import ScrollToBottomButton from './ScrollToBottomButton';
 import InputMessageAdmin from './Message/InputMessageAdmin';
 import MessageAdmin from './Message/MessageAdmin';
+import { ExamplePromptsComponent } from '@components/ExamplePrompts';
 
 const ChatContentAdmin = () => {
   const inputRole = useStore((state) => state.inputRole);
@@ -32,6 +33,7 @@ const ChatContentAdmin = () => {
   const hasUserMessages = messages.some(message => message.role === 'user');
   const hasAdminMessages = messages.some(message => message.role === 'admin');
   
+  const [inputMessage, setInputMessage] = useState('');
   
   useEffect(() => {
     if (generating) {
@@ -55,11 +57,16 @@ const ChatContentAdmin = () => {
                 )
               ))}
             </div>
+            {!hasUserMessages && !hasAdminMessages && (
+              <div className="w-full">
+                <ExamplePromptsComponent setInputMessage={setInputMessage} role={'admin'} />
+              </div>
+            )}
           </div>
         </ScrollToBottom>
       </div>
       <div className='w-full dark:bg-gray-800'>
-        <InputMessageAdmin role={"admin"} content='' messageIndex={stickyIndex} />
+        <InputMessageAdmin role={inputRole} content={inputMessage} messageIndex={stickyIndex} />
       </div>
     </div>
   );

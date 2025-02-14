@@ -8,7 +8,7 @@ interface Prompt {
   examples: string[];
 }
 
-const prompts: Prompt[] = [
+const userPrompts: Prompt[] = [
   {
     examples: ["Does this new gradient fit our premium feel @supervisor?"],
   },
@@ -23,7 +23,31 @@ const prompts: Prompt[] = [
   },
 ];
 
-export const ExamplePromptsComponent: React.FC<{setInputMessage: Dispatch<SetStateAction<string>>}> = ({setInputMessage}) => {
+// Admin-specific prompts
+const adminPrompts: Prompt[] = [
+  {
+    examples: [
+      "Review the latest analytics report and provide a summary.",
+    ],
+  },
+  {
+    examples: [
+      "Generate a report on user activity for the past month.",
+    ],
+  },
+  {
+    examples: [
+      "Prepare a presentation for the upcoming board meeting.",
+    ],
+  },
+  {
+    examples: [
+      "Audit the permissions for all admin accounts.",
+    ],
+  },
+];
+
+export const ExamplePromptsComponent: React.FC<{setInputMessage: Dispatch<SetStateAction<string>>, role: string}> = ({setInputMessage, role}) => {
   const { t } = useTranslation();
   const setChats = useStore((state) => state.setChats);
   const currentChatIndex = useStore((state) => state.currentChatIndex);
@@ -32,7 +56,6 @@ export const ExamplePromptsComponent: React.FC<{setInputMessage: Dispatch<SetSta
   const handlePromptClick = async (prompt: string) => {
     if (generating) return;
     setInputMessage(prompt)
-
   };
 
   const containerVariants = {
@@ -52,6 +75,8 @@ export const ExamplePromptsComponent: React.FC<{setInputMessage: Dispatch<SetSta
       transition: { duration: 0.4, ease: "easeOut" },
     },
   };
+
+  const prompts = role === "user" ? userPrompts : adminPrompts;
 
   return (
     <motion.div

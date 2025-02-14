@@ -62,7 +62,7 @@ const ChatContent = () => {
             </div>
             {!hasUserMessages && !hasAdminMessages && (
               <div className="w-full">
-                <ExamplePromptsComponent setInputMessage={setInputMessage} />
+                <ExamplePromptsComponent setInputMessage={setInputMessage} role={'user'} />
               </div>
             )}
           </div>

@@ -23,13 +23,14 @@ import ChatAdmin from '@components/Chat/ChatAdmin';
 import Skeleton from '@components/Skeleton';
 import MenuAdmin from '@components/Menu/MenuAdmin';
 import useUpdateChats from '@utils/updateChats';
+import useInitialiseNewChat from '@hooks/useInitialiseNewChat';
 
 const login = (email: string, password: string) =>
   supabase.auth.signInWithPassword({ email, password });
 
 function AdminChild() {
 
-  const initialiseNewChat = useInitialiseNewAdminChat();
+  const initialiseNewChat = useInitialiseNewChat();
   const addAdminChat = useAddAdminChat();
   const updateChats = useUpdateChats();
   const setChats = useStore((state) => state.setChats);
@@ -46,8 +47,15 @@ function AdminChild() {
     const func = async () => {
       setLoading(true)
       const { threadsData, threadsError } = await fetchConversationsFromSupabase(user, adminId);
+
+      if(threadsData == undefined || threadsData.length < 1 || threadsError){
+        console.log('hello')
+        initialiseNewChat();
+        setLoading(false)
+        return;
+      }
   
-      threadsData?.forEach(async (thread) => {
+      threadsData.forEach(async (thread) => {
         // If `some` returns true, it means a match is found, and `addAdminChat` won't be called.
         const exists = chats?.some((chat) => {
           return chat.id === thread.id; // Exits early if condition is met
