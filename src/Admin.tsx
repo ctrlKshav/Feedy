@@ -57,8 +57,6 @@ function AdminChild() {
           await addAdminChat(thread); 
         }
         else{
-          console.log("start")
-          console.log(thread)
           const response = updateChats(thread);
         }
       });
