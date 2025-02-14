@@ -27,9 +27,9 @@ const UserProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to='/login' replace />;
   }
 return (
-  <div>
+  <>
     {children}
-  </div>
+  </>
   );
 };
 
@@ -45,9 +45,9 @@ const AdminProtectedRoute = ({ children }: { children: React.ReactNode}) => {
     return <Navigate to='/login' replace />;
   }
 return (
-  <div>
+  <>
     {children}
-  </div>
+  </>
 )
 
 };

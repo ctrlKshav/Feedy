@@ -103,7 +103,7 @@ function  AppChild() {
   }, []);
 
   return (
-    <div className='overflow-hidden w-full h-full min-h-screen relative '>
+    <div className='overflow-hidden w-full h-full relative '>
       <Menu loading={loading} />
       <Chat />
       {/* <ApiPopup /> */}
