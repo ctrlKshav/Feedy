@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useGoogleLogin, googleLogout } from '@react-oauth/google';
 import useGStore from '@store/cloud-auth-store';
 import useStore from '@store/store';
-import { createJSONStorage } from 'zustand/middleware';
 
 const GoogleSyncButton = ({ loginHandler }: { loginHandler?: () => void }) => {
   const { t } = useTranslation(['drive']);
@@ -41,10 +40,7 @@ const GoogleSyncButton = ({ loginHandler }: { loginHandler?: () => void }) => {
     setSyncStatus('unauthenticated');
     setCloudSync(false);
     googleLogout();
-    useStore.persist.setOptions({
-      storage: createJSONStorage(() => localStorage),
-    });
-    useStore.persist.rehydrate();
+    // Removed persist local storage logic
     setToastStatus('success');
     setToastMessage(t('toast.stop'));
     setToastShow(true);

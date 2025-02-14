@@ -62,10 +62,6 @@ const GoogleSync = ({ clientId }: { clientId: string }) => {
               setFileId(_files[0].id);
             }
           }
-          useStore.persist.setOptions({
-            storage: createGoogleCloudStorage(),
-          });
-          useStore.persist.rehydrate();
         }
       } catch (e: unknown) {
         console.log(e);
@@ -182,7 +178,6 @@ const GooglePopup = ({
                   className='btn btn-primary cursor-pointer'
                   onClick={async () => {
                     setFileId(_fileId);
-                    await useStore.persist.rehydrate();
                     setToastStatus('success');
                     setToastMessage(t('toast.sync'));
                     setToastShow(true);
