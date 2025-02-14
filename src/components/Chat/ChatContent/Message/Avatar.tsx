@@ -51,9 +51,9 @@ const AdminAvatar = () => {
   return (
     <div
       className='relative h-[30px] w-[30px] p-1 rounded-full text-white flex items-center justify-center'
-      style={{ backgroundColor: 'rgb(255, 255, 255)' }}
+      style={{ backgroundColor: '#008080' }}
     >
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROxV0RccSGjqAQPEDjdc3J88bagOcEUuAWqA&s" alt='Manager Avatar' className='h-full w-full image' />
+      <PersonIcon />
     </div>
   );
 };
