@@ -7,6 +7,7 @@ import InputMessage from './Message/InputMessage';
 import useSubmit from '@hooks/useSubmit';
 import { ExamplePromptsComponent } from '@components/ExamplePrompts';
 import { useAuth } from '@src/context/AuthProvider';
+import Skeleton from '@components/Skeleton';
 
 const ChatContent = () => {
   const inputRole = useStore((state) => state.inputRole);
@@ -31,15 +32,21 @@ const ChatContent = () => {
   const generating = useStore.getState().generating;
   const hideSideMenu = useStore((state) => state.hideSideMenu);
   const saveRef = useRef<HTMLDivElement>(null);
-
+  
+  // Track if messages are being initially loaded
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const hasUserMessages = messages.some((message) => message.role === 'user');
   const hasAdminMessages = messages.some((message) => message.role === 'admin');
-
-  // NEW: Add state for input message
   const [inputMessage, setInputMessage] = useState('');
-  
-  const {user} = useAuth();
-  
+  const { user, loading: authLoading } = useAuth();
+
+  // Handle initial load state
+  useEffect(() => {
+    if (messages.length > 0 || hasUserMessages || hasAdminMessages) {
+      setIsInitialLoad(false);
+    }
+  }, [messages, hasUserMessages, hasAdminMessages]);
+
   useEffect(() => {
     if (generating) {
       setError('');
@@ -47,6 +54,16 @@ const ChatContent = () => {
   }, [generating, inputMessage]);
 
   const { error } = useSubmit();
+
+  // Determine whether to show example prompts
+  const shouldShowExamplePrompts = !authLoading && 
+    !isInitialLoad && 
+    !hasUserMessages && 
+    !hasAdminMessages;
+
+  if(authLoading || isInitialLoad) {
+    return <Skeleton />;
+  }
 
   return (
     <div className='flex-1 flex flex-col h-full relative'>
@@ -63,9 +80,12 @@ const ChatContent = () => {
                 )
               ))}
             </div>
-            {!hasUserMessages && !hasAdminMessages && (
+            {shouldShowExamplePrompts && (
               <div className="w-full">
-                <ExamplePromptsComponent setInputMessage={setInputMessage} role={user?.role ?? "user"} />
+                <ExamplePromptsComponent 
+                  setInputMessage={setInputMessage} 
+                  role={user?.role ?? "user"} 
+                />
               </div>
             )}
           </div>

@@ -14,6 +14,7 @@ interface AuthContextType {
   user: User | null;
   admin: Admin | null;
   adminId: string | null;
+  loading: boolean;
   authMode: 'user' | 'admin';
 }
 
@@ -79,6 +80,7 @@ export const AuthProvider = ({ children, mode }: AuthProviderProps) => {
         user,
         admin,
         adminId,
+        loading,
         authMode: mode
       }}
     >
