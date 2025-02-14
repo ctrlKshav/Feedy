@@ -31,7 +31,7 @@ const SignupPage: React.FC = () => {
 
     try {
       await signUp(name, email, password)
-      navigate("/")
+      navigate("/login")
     } catch (err) {
       setError("Failed to create an account")
     } finally {
