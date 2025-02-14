@@ -16,10 +16,9 @@ import { authLoader, fetchUserId } from '@utils/auth';
 import { fetchConversationsFromSupabase } from '@utils/supabaseOperations';
 import useInitialiseNewAdminChat from '@hooks/admin/useInitialiseNewAdminChat';
 import useAddAdminChat from '@hooks/admin/useAddAdminChat';
-import { useAuth } from './context/AdminAuthProvider';
+import { useAuth } from './context/AuthProvider';
 import { Suspense } from 'react';
 import { Loader2 } from 'lucide-react';
-import ChatAdmin from '@components/Chat/ChatAdmin';
 import Skeleton from '@components/Skeleton';
 import MenuAdmin from '@components/Menu/MenuAdmin';
 import useUpdateChats from '@utils/updateChats';
@@ -106,7 +105,7 @@ function AdminChild() {
   return (
     <div className='overflow-hidden w-full h-full relative'>
       <MenuAdmin loading={loading} />
-      <ChatAdmin />
+      <Chat />
       {/* <ApiPopup /> */}
       <Toast />
     </div>

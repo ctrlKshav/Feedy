@@ -84,69 +84,10 @@ const ContentView = memo(
       ) : (
         <></>
       );
-
-      if (role === 'user') {
-        return (
-          <div className='relative flex flex-col items-end gap-2 pb-2 group'>
-            <div className='flex-grow flex flex-col items-end markdown prose w-full break-words dark:prose-invert dark'>
-              <ReactMarkdown
-                remarkPlugins={[
-                  remarkGfm,
-                  [remarkMath, { singleDollarTextMath: inlineLatex }],
-                ]}
-                rehypePlugins={[
-                  rehypeKatex,
-                  [
-                    rehypeHighlight,
-                    {
-                      detect: true,
-                      ignoreMissing: true,
-                      subset: codeLanguageSubset,
-                    },
-                  ],
-                ]}
-                linkTarget='_new'
-                components={{
-                  code,
-                  p,
-                }}
-              >
-                {content}
-              </ReactMarkdown>
-              <div className=' flex flex-wrap gap-4 items-center'>
-                {attachments && attachments.length > 0 && (
-                  <div className={`flex flex-wrap order-2 gap-4`}>
-                    {attachments.map((attachment: Attachment, index: number) => (
-                      <a
-                        key={index}
-                        href={attachment.url}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='flex items-center gap-2 p-2 text-sm rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-700 no-underline text-white'
-                      >
-                        {getFileIcon(attachment.type)}
-                        <span className='text-xs text-black dark:text-white'>
-                          {attachment.name.length > 20
-                            ? `${attachment.name.substring(
-                                0,
-                                15
-                              )}...${attachment.name.split('.').pop()}`
-                            : attachment.name}
-                        </span>
-                      </a>
-                    ))}
-                  </div>
-                )}
-                <CopyButtonElement />
-              </div>
-            </div>
-          </div>
-        );
-      }
   
       return (
-        <div className='relative flex flex-col items-start gap-2 pb-2 group'>
-          <div className='flex-grow flex flex-col items-start markdown prose w-full break-words dark:prose-invert dark'>
+        <div className={`relative flex flex-col ${role === 'user' ? "items-end" : "items-start"} gap-2 pb-2 group`}>
+          <div className={`flex-grow flex flex-col ${role === 'user' ? "items-end" : "items-start"}  markdown prose w-full break-words dark:prose-invert dark`}>
             <ReactMarkdown
               remarkPlugins={[
                 remarkGfm,
@@ -173,7 +114,7 @@ const ContentView = memo(
             </ReactMarkdown>
             <div className='flex flex-wrap gap-4 items-center'>
               {attachments && attachments.length > 0 && (
-                <div className='flex flex-wrap gap-4'>
+                <div className={`flex flex-wrap ${role === 'user' ? "order-2" : ""} gap-4`}>
                   {attachments.map((attachment: Attachment, index: number) => (
                     <a
                       key={index}

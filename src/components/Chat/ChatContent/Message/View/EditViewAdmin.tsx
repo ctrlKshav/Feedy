@@ -10,7 +10,7 @@ import StopGeneratingButton from '@components/StopGeneratingButton/StopGeneratin
 
 import { saveConversationToSupabase } from '@utils/supabaseOperations';
 import { authLoader, fetchUserId } from '@utils/auth';
-import { useAuth } from '@src/context/AdminAuthProvider';
+import { useAuth } from '@src/context/AuthProvider';
 import { uploadImages } from '@api/api';
 import useSubmitAdmin from '@hooks/useSubmitAdmin';
 

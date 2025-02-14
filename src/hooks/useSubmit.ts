@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Attachment, ChatInterface } from '@type/chat';
 import { uploadImages, getImageAnalysis } from '@api/api';
 import { saveConversationToSupabase, updateUserAttachments } from '@utils/supabaseOperations';
-import { useAuth } from '@src/context/UserAuthProvider';
+import { useAuth } from '@src/context/AuthProvider';
 
 const useSubmit = () => {
   const { t } = useTranslation('api');

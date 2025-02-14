@@ -12,7 +12,7 @@ import StopGeneratingButton from '@components/StopGeneratingButton/StopGeneratin
 
 import { saveConversationToSupabase } from '@utils/supabaseOperations';
 import { authLoader, fetchUserId } from '@utils/auth';
-import { useAuth } from '@src/context/UserAuthProvider';
+import { useAuth } from '@src/context/AuthProvider';
 
 const EditView = ({
   content,

@@ -6,6 +6,7 @@ import Message from './Message';
 import InputMessage from './Message/InputMessage';
 import useSubmit from '@hooks/useSubmit';
 import { ExamplePromptsComponent } from '@components/ExamplePrompts';
+import { useAuth } from '@src/context/AuthProvider';
 
 const ChatContent = () => {
   const inputRole = useStore((state) => state.inputRole);
@@ -36,7 +37,9 @@ const ChatContent = () => {
 
   // NEW: Add state for input message
   const [inputMessage, setInputMessage] = useState('');
-
+  
+  const {user} = useAuth();
+  
   useEffect(() => {
     if (generating) {
       setError('');
@@ -62,7 +65,7 @@ const ChatContent = () => {
             </div>
             {!hasUserMessages && !hasAdminMessages && (
               <div className="w-full">
-                <ExamplePromptsComponent setInputMessage={setInputMessage} role={'user'} />
+                <ExamplePromptsComponent setInputMessage={setInputMessage} role={user?.role ?? "user"} />
               </div>
             )}
           </div>
