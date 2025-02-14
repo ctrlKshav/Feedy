@@ -1,27 +1,28 @@
 ﻿import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import supabase from "@utils/supabase";
 import { User } from "@supabase/supabase-js";
-import { fetchUserFromProfiles, fetchUserId } from "@utils/auth";
+import { fetchUserFromProfiles } from "@utils/auth";
 import Skeleton from "@components/Skeleton";
 
-// Define interface for Admin type
-interface Admin extends User {
-  persona: string;
+// Extend the Supabase User with optional fields (e.g., persona).
+interface ExtendedUser extends User {
+  persona?: string;
 }
 
-// Define the unified context type
+// AuthContext interface with simplified fields
 interface AuthContextType {
-  user: User | null;
-  admin: Admin | null;
-  adminId: string | null;
+  login: (email: string, password: string, adminEmail: string) => Promise<any>;
+  signOut: () => Promise<void>;
+  user: ExtendedUser | null;
   loading: boolean;
-  authMode: 'user' | 'admin';
+  admin: ExtendedUser | null; // <--- new field for the other person's profile
+  adminId: string | null;
 }
 
 // Create context with undefined default
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Custom hook to use the context safely
+// Hook to consume the context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -30,75 +31,71 @@ export const useAuth = () => {
   return context;
 };
 
-// Login & signout functions
-const login = (email: string, password: string) =>
-  supabase.auth.signInWithPassword({ email, password });
-const signOut = () => supabase.auth.signOut();
-
 interface AuthProviderProps {
   children: ReactNode;
-  mode: 'user' | 'admin';
 }
 
-export const AuthProvider = ({ children, mode }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [admin, setAdmin] = useState<Admin | null>(null);
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [user, setUser] = useState<ExtendedUser | null>(null);
+  const [admin, setAdmin] = useState<ExtendedUser | null>(null); // <--- new state
   const [adminId, setAdminId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Updated login function to accept adminEmail
+  const login = async (email: string, password: string, adminEmail: string) => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+
+      const { fetchedProfile } = await fetchUserFromProfiles(email);
+      setUser(fetchedProfile ?? null);
+
+      // Fetch the other person's (admin) profile
+      const { fetchedProfile: fetchedAdmin } = await fetchUserFromProfiles(adminEmail);
+      setAdmin(fetchedAdmin ?? null);
+      const adminId = fetchedAdmin?.id ?? null;
+      setAdminId(adminId);
+      return fetchedProfile;
+
+    } catch (error) {
+      console.error("Authentication error:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+    
+  };
+
+  // Sign out function
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
+
+  // Check existing session on mount
   useEffect(() => {
-    const getAuth = async () => {
+    const getSession = async () => {
       setLoading(true);
       try {
-        if (mode === 'admin') {
-          const { data } = await login("admin@gmail.com", "realadmin");
-          const { fetchedProfile: currentUser } = await fetchUserFromProfiles("admin@gmail.com");
-          const { fetchedData } = await fetchUserId("user@gmail.com");
-          setUser(currentUser ?? null);
-          setAdminId(fetchedData?.id ?? null);
-        } else {
-          const { data } = await login("user@gmail.com", "realuser");
-          const { fetchedProfile: currentUser } = await fetchUserFromProfiles("user@gmail.com");
-          const { fetchedProfile: fetchedAdmin } = await fetchUserFromProfiles("admin@gmail.com");
-          setUser(currentUser ?? null);
-          setAdmin(fetchedAdmin ?? null);
-          setAdminId(fetchedAdmin?.id ?? null);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const { fetchedProfile } = await fetchUserFromProfiles(session.user.email ?? "");
+          setUser(fetchedProfile ?? null);
         }
+        
       } catch (error) {
-        console.error('Authentication error:', error);
+        console.error("Session error:", error);
       } finally {
         setLoading(false);
       }
     };
-
-    getAuth();
-  }, [mode]);
+    getSession();
+  }, []);
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        admin,
-        adminId,
-        loading,
-        authMode: mode
-      }}
-    >
+    <AuthContext.Provider value={{ login, signOut, user, loading, admin, adminId }}>
       {loading ? <Skeleton /> : children}
     </AuthContext.Provider>
   );
 };
-
-// Example usage for Admin component
-export const AdminAuthProvider = ({ children }: { children: ReactNode }) => (
-  <AuthProvider mode="admin">
-    {children}
-  </AuthProvider>
-);
-
-// Example usage for User component
-export const UserAuthProvider = ({ children }: { children: ReactNode }) => (
-  <AuthProvider mode="user">
-    {children}
-  </AuthProvider>
-);

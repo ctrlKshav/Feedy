@@ -11,7 +11,6 @@ const useInitialiseNewChat = () => {
   const initialiseNewChat = () => {
     setChats([generateDefaultChat()]);
     setCurrentChatIndex(0);
-    console.log(chats)
   };
 
   return initialiseNewChat;

@@ -86,9 +86,6 @@ const EditView = ({
     const updatedChats: ChatInterface[] = JSON.parse(
       JSON.stringify(useStore.getState().chats)
     );
-
-
-    
     const {messageResponse} = await saveConversationToSupabase(
       user,
       adminId,
@@ -98,7 +95,6 @@ const EditView = ({
       currentChatIndex
     );
 
-    
     const messageId = messageResponse.data && messageResponse.data[0].id
 
     const updatedMessages = updatedChats[currentChatIndex].messages;
