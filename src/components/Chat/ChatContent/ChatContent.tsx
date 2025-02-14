@@ -40,12 +40,6 @@ const ChatContent = () => {
   const [inputMessage, setInputMessage] = useState('');
   const { user, loading: authLoading } = useAuth();
 
-  // Handle initial load state
-  useEffect(() => {
-    if (messages.length > 0 || hasUserMessages || hasAdminMessages) {
-      setIsInitialLoad(false);
-    }
-  }, [messages, hasUserMessages, hasAdminMessages]);
 
   useEffect(() => {
     if (generating) {
@@ -54,16 +48,6 @@ const ChatContent = () => {
   }, [generating, inputMessage]);
 
   const { error } = useSubmit();
-
-  // Determine whether to show example prompts
-  const shouldShowExamplePrompts = !authLoading && 
-    !isInitialLoad && 
-    !hasUserMessages && 
-    !hasAdminMessages;
-
-  if(authLoading || isInitialLoad) {
-    return <Skeleton />;
-  }
 
   return (
     <div className='flex-1 flex flex-col h-full relative'>
@@ -80,7 +64,7 @@ const ChatContent = () => {
                 )
               ))}
             </div>
-            {shouldShowExamplePrompts && (
+            {!hasUserMessages && !hasAdminMessages && (
               <div className="w-full">
                 <ExamplePromptsComponent 
                   setInputMessage={setInputMessage} 

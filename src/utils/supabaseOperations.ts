@@ -1,11 +1,13 @@
-﻿import { SupabaseThread } from "@type/supabase";
+﻿import { Profile, SupabaseThread } from "@type/supabase";
 import { User } from "@supabase/supabase-js";
 import supabase from "./supabase";
 import { Attachment, ChatInterface } from "@type/chat";
 
-export const saveConversationToSupabase = async (user:User | null,adminId: string | null, content : string, 
+export const saveConversationToSupabase = async (user:Profile | null,adminId: string | null, content : string, 
    inputRole: string, updatedChats: ChatInterface[], currentChatIndex: number, attachments?: Attachment[]
 ) => {
+  console.log('yah')
+  console.log(user)
 
   if(user?.role === "user"){
   const threadResponse = await supabase
@@ -57,7 +59,7 @@ export const saveConversationToSupabase = async (user:User | null,adminId: strin
 }
 
 export const fetchConversationsFromSupabase = async (
-  user: User | null,
+  user: Profile | null,
   adminId: string | null
 ): Promise<{ threadsData: SupabaseThread[] | null; threadsError: any }> => {
   if (!user) return { threadsData: null, threadsError: "User not found" };

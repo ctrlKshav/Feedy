@@ -21,3 +21,12 @@ export interface ThreadMessage {
     created_at : EpochTimeStamp
     updated_at? : EpochTimeStamp
 }
+
+export interface Profile{
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    persona: string;
+    created_at?: EpochTimeStamp;
+}

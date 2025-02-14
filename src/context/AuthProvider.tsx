@@ -1,28 +1,21 @@
 ﻿import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import supabase from "@utils/supabase";
-import { User } from "@supabase/supabase-js";
 import { fetchUserFromProfiles } from "@utils/auth";
 import Skeleton from "@components/Skeleton";
+import { Profile } from "@type/supabase";
+import useStore from "@store/store"; // <-- import the Zustand store
 
-// Extend the Supabase User with optional fields (e.g., persona).
-interface ExtendedUser extends User {
-  persona?: string;
-}
-
-// AuthContext interface with simplified fields
 interface AuthContextType {
   login: (email: string, password: string, adminEmail: string) => Promise<any>;
   signOut: () => Promise<void>;
-  user: ExtendedUser | null;
+  user: Profile | null;
   loading: boolean;
-  admin: ExtendedUser | null; // <--- new field for the other person's profile
+  admin: Profile | null;
   adminId: string | null;
 }
 
-// Create context with undefined default
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Hook to consume the context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -36,12 +29,25 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<ExtendedUser | null>(null);
-  const [admin, setAdmin] = useState<ExtendedUser | null>(null); // <--- new state
+  const [user, setUser] = useState<Profile | null>(null);
+  const [admin, setAdmin] = useState<Profile | null>(null);
   const [adminId, setAdminId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Updated login function to accept adminEmail
+  // Pull setAdminId from Zustand store
+  const setAdminIdState = useStore((state) => state.setAdminIdState);
+
+  // Store adminId in localStorage
+  const storeAdminId = (id: string | null) => {
+    setAdminId(id);
+    setAdminIdState(id || "");
+    if (id) {
+      localStorage.setItem("adminId", id);
+    } else {
+      localStorage.removeItem("adminId");
+    }
+  };
+
   const login = async (email: string, password: string, adminEmail: string) => {
     setLoading(true);
     try {
@@ -51,41 +57,55 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const { fetchedProfile } = await fetchUserFromProfiles(email);
       setUser(fetchedProfile ?? null);
 
-      // Fetch the other person's (admin) profile
+      // Fetch admin
       const { fetchedProfile: fetchedAdmin } = await fetchUserFromProfiles(adminEmail);
       setAdmin(fetchedAdmin ?? null);
-      const adminId = fetchedAdmin?.id ?? null;
-      setAdminId(adminId);
-      return fetchedProfile;
 
-    } catch (error) {
-      console.error("Authentication error:", error);
-      throw error;
+      const fetchedAdminId = fetchedAdmin?.id ?? null;
+      storeAdminId(fetchedAdminId);
+
+      return fetchedProfile;
+    } catch (err) {
+      console.error("Authentication error:", err);
+      throw err;
     } finally {
       setLoading(false);
     }
-    
   };
 
-  // Sign out function
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
+    setAdmin(null);
+    storeAdminId(null);
   };
 
-  // Check existing session on mount
+  // Check existing session on mount + pull adminId from localStorage
   useEffect(() => {
     const getSession = async () => {
       setLoading(true);
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          const { fetchedProfile } = await fetchUserFromProfiles(session.user.email ?? "");
-          setUser(fetchedProfile ?? null);
+        // If adminId is in localStorage, set it
+        const storedAdminId = localStorage.getItem("adminId");
+        if (storedAdminId) {
+          storeAdminId(storedAdminId);
+          // Optionally fetch the admin by ID or email if needed
         }
-        
-      } catch (error) {
-        console.error("Session error:", error);
+
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.email) {
+          const { fetchedProfile } = await fetchUserFromProfiles(session.user.email);
+          setUser(fetchedProfile ?? null);
+
+          if (fetchedProfile?.adminEmail) {
+            const { fetchedProfile: fetchedAdmin } = await fetchUserFromProfiles(fetchedProfile.adminEmail);
+            setAdmin(fetchedAdmin ?? null);
+            // If needed, overwrite stored adminId from the user’s record:
+            storeAdminId(fetchedAdmin?.id ?? null);
+          }
+        }
+      } catch (err) {
+        console.error("Session error:", err);
       } finally {
         setLoading(false);
       }

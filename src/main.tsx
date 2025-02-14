@@ -27,13 +27,13 @@ const UserProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to='/login' replace />;
   }
 return (
-  <>
+  <div>
     {children}
-  </>
+  </div>
   );
 };
 
-const AdminProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const AdminProtectedRoute = ({ children }: { children: React.ReactNode}) => {
   const { user, loading, signOut } = useAuth();
 
   if (loading) {
@@ -45,10 +45,11 @@ const AdminProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to='/login' replace />;
   }
 return (
-  <>
+  <div>
     {children}
-  </>
-  );
+  </div>
+)
+
 };
 
 // Route configurations
@@ -100,8 +101,10 @@ const AppRoutes = () => (
   </Routes>
 );
 
-// Root render
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+// Ensure this is the only time you call createRoot for #root:
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+
+root.render(
   <BrowserRouter>
     <Suspense fallback={<Skeleton />}>
       <AppRoutes />

@@ -45,9 +45,12 @@ function  AppChild() {
   const {user, adminId} = useAuth();
   
   useEffect(() => {
+    console.log('reaching')
     const func = async () => {
       setLoading(true)
+      console.log('raught')
       const { threadsData, threadsError } = await fetchConversationsFromSupabase(user, adminId);
+      console.log(threadsData)
       if(threadsData == undefined || threadsData.length < 1 || threadsError){
         initialiseNewChat();
         setLoading(false)
@@ -100,7 +103,7 @@ function  AppChild() {
   }, []);
 
   return (
-    <div className='overflow-hidden w-full h-full relative'>
+    <div className='overflow-hidden w-full h-full min-h-screen relative '>
       <Menu loading={loading} />
       <Chat />
       {/* <ApiPopup /> */}
