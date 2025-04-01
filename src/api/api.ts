@@ -25,7 +25,7 @@ export const uploadImages = async (images: File[]): Promise<UploadResponse> => {
   const formData = new FormData();
   images.forEach(image => formData.append('images', image));
   
-  const response = await fetch('http://localhost:8000/upload-images', {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/upload-images`, {
     method: 'POST',
     body: formData,
   });
@@ -43,7 +43,7 @@ export const getImageAnalysis = async (
   question: string,
   admin_persona: string,
 ): Promise<AnalysisResponse[]> => {
-  const response = await fetch('http://localhost:8000/analyze-images', {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/analyze-images`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export const getImageAnalysis = async (
 };
 
 export const refinePersona = async (initialPrompt: string): Promise<PersonaResponse> => {
-  const response = await fetch('http://localhost:8000/refine-persona', {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/refine-persona`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
