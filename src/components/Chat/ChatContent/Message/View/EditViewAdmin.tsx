@@ -176,7 +176,7 @@ const EditViewAdmin = ({
                 _setContent(e.target.value);
               }}
               value={_content}
-              placeholder={t('submitPlaceholder') as string}
+              placeholder={t('Enter your message here...') as string}
               onKeyDown={handleKeyDown}
               rows={1}
             ></textarea>
